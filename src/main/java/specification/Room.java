@@ -32,6 +32,12 @@ public class Room {
             return false;
 
         Room that = (Room) obj;
+
+        //If they have the same address they are the same instance of the class
+        if (this == that)
+            return true;
+
+        //If their name is the same
         return this.getRoomName().equals(that.getRoomName());
     }
 }
