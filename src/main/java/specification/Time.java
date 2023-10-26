@@ -52,4 +52,35 @@ public class Time {
         this.startTime = startTime;
         this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
     }
+
+    //TODO Da li treba i hashmapa da se proverava
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+
+        if (!(obj instanceof Time))
+            return false;
+
+        Time that = (Time) obj;
+
+        //If they have the same address they are the same instance of the class
+        if (this == that)
+            return true;
+
+        //If their START hour or minuts are different they are not the same
+        if (this.getStartTime().getHour() != that.getStartTime().getHour() || this.getStartTime().getMinute() != that.getStartTime().getMinute())
+            return false;
+
+        //If their END hour or minuts are different they are not the same
+        if (this.getEndTime().getHour() != that.getEndTime().getHour() || this.getEndTime().getMinute() != that.getEndTime().getMinute())
+            return false;
+
+        //If they are not the same date
+        if (!this.getDate().equals(that.getDate()))
+            return false;
+
+        //They are on the same day and same time, so they are the same
+        return true;
+    }
 }

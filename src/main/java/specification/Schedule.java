@@ -9,4 +9,6 @@ public abstract class Schedule {
 
 
     public abstract void initialization();
+
+    public abstract void addRooms();
 }
