@@ -26,29 +26,32 @@ public class Time {
     //Constructor will accept bool which tells if true that its 10-12h time, else it tells that its 10h + 2 so then i will change it to 10-12h
     //Constructor gets LocalDate, startTime, endTime, bool isEndTime
     //Time "from to", meaning 10-12h
-    public Time(HashMap<String, String> additionally, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public Time(HashMap<String, String> additionally, LocalTime startTime, LocalTime endTime) {
         this.additionally = additionally;
-        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
     //Without addicional data(HashMap)
-    public Time(LocalDate date, LocalTime startTime, LocalTime endTime) {
-        this.date = date;
+    public Time(LocalTime startTime, LocalTime endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
     //Time "from + how" much, meaning 10h + 2 == 10-12h
-    public Time(HashMap<String, String> additionally, LocalDate date, LocalTime startTime, long minutsToAdd) {
+    public Time(HashMap<String, String> additionally, LocalTime startTime, long minutsToAdd) {
         this.additionally = additionally;
-        this.date = date;
         this.startTime = startTime;
         this.endTime = startTime.plusMinutes(minutsToAdd);// adds minuts to date to be "from to"
     }
 
     //Without addicional data(HashMap)
+    public Time(LocalTime startTime, long minutsToAdd) {
+        this.startTime = startTime;
+        this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
+    }
+
+    //FOR TESTING
     public Time(LocalDate date, LocalTime startTime, long minutsToAdd) {
         this.date = date;
         this.startTime = startTime;
@@ -84,5 +87,19 @@ public class Time {
 
         //They are on the same day and same time, so they are the same
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Time{" +
+                "date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
     }
 }
