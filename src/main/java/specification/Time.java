@@ -1,6 +1,7 @@
 package specification;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 
 //Represent set time, one instace of Time represent one row
 @Getter
+@Setter
 public class Time {
     private HashMap<String, String> additionally;//additional columns
 
@@ -43,7 +45,7 @@ public class Time {
         this.additionally = additionally;
         this.date = date;
         this.startTime = startTime;
-        this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
+        this.endTime = startTime.plusMinutes(minutsToAdd);// adds minuts to date to be "from to"
     }
 
     //Without addicional data(HashMap)
