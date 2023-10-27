@@ -1,19 +1,30 @@
 package specification;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+@Getter
+@Setter
 public abstract class Schedule {
 
     //Begging and ending date of schedule
     private LocalDate startDate;
     private LocalDate endDate;
 
-    private HashSet<Room> rooms;//hashSet so there is only one of every class
-    private HashSet<Appointment> appointments; //every index represents one row
-    private List<LocalDate> exclusiveDays; // Working Sundays
-    private List<LocalDate> notWorkingDays; // doesn't include Sunday and Saturday
+    private HashSet<Room> rooms = new HashSet<>();//hashSet so there is only one of every class
+    private HashSet<Appointment> appointments = new HashSet<>(); //every index represents one row
+    private List<LocalDate> exclusiveDays = new ArrayList<>(); // Working Sundays
+    private List<LocalDate> notWorkingDays = new ArrayList<>(); // doesn't include Sunday and Saturday
+
+    public Schedule(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     //TODO Fix documentation arguments
     /**
