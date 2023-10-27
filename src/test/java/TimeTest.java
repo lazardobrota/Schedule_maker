@@ -14,7 +14,18 @@ public class TimeTest {
     @Test
     public void checkToDate() {
         Time time = new Time(LocalDate.now(), LocalTime.now(), 120);
-        LocalTime test = LocalTime.now().plus(Duration.of(120, ChronoUnit.MINUTES));
+        LocalTime test = LocalTime.now().plusMinutes(120);
         assertEquals(test.getHour(), time.getEndTime().getHour());
+    }
+
+    @Test
+    public void areTimeClassesSame() {
+        Time time = new Time(LocalDate.now(), LocalTime.now(), 120);
+        Time time2 = new Time(LocalDate.now(), LocalTime.now(), 120);
+
+        assertEquals(time, time2);
+
+        //time.setDate(LocalDate.now().minusDays(1));
+        //assertEquals(time, time2);
     }
 }

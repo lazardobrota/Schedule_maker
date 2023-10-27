@@ -5,11 +5,17 @@ import java.util.HashSet;
 import java.util.List;
 
 public abstract class Schedule {
+
+    //Begging and ending date of schedule
+    private LocalDate startDate;
+    private LocalDate endDate;
+
     private HashSet<Room> rooms;//hashSet so there is only one of every class
     private HashSet<Appointment> appointments; //every index represents one row
     private List<LocalDate> exclusiveDays; // Working Sundays
     private List<LocalDate> notWorkingDays; // doesn't include Sunday and Saturday
 
+    //TODO Fix documentation arguments
     /**
      * initializes empty table and fills list of all Exclusive days(Working Sundays) and Not working days (doesn't include Sunday and Saturday)
      */
@@ -25,24 +31,33 @@ public abstract class Schedule {
     /**
      * Add appointment to List if there isnt already that appointment in there
      * @param appointment
+     * @param day
      * @return boolean that returns TRUE if appointment has been added
      */
-    public abstract boolean addAppointment(Appointment appointment);
+    public abstract boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate);
 
     /**
      * Removes appointment from list if it exists
      * @param appointment
+     * @param day
      * @return boolean that returns TRUE if appointment has been removed
      */
-    public abstract boolean removeAppointment(Appointment appointment);
+    public abstract boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate);
 
     //TODO Da li treba dva appointmenta ili drugacije provera
     /**
-     * Changes appointments if old one exist
-     * @param oldAppoint
-     * @param newAppoint
+     * Check if old appointment exist and sets date to new date if it isnt already taken
+     * @param oldAppoint needs to be removed
+     * @param newDate chagnes date on oldAppoint
      * @return boolean return true if it can remove old one and add new one
      */
-    public abstract boolean changeAppointment(Appointment oldAppoint, Appointment newAppoint);
+    public abstract boolean changeAppointment(Appointment oldAppoint, LocalDate newDate);
+
+    /**
+     * Searches for Appointment in table
+     * @param appointment
+     * @return boolean true if it exists
+     */
+    public abstract boolean search(Appointment appointment);
 
 }
