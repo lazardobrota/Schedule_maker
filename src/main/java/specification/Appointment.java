@@ -26,4 +26,17 @@ public class Appointment {
         //If room and time are the same
         return this.getRoom().equals(that.getRoom()) && this.getTime().equals(that.getTime());
     }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "room=" + room +
+                ", time=" + time +
+                '}';
+    }
 }

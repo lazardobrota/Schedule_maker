@@ -40,4 +40,16 @@ public class Room {
         //If their name is the same
         return this.getRoomName().equals(that.getRoomName());
     }
+
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomName='" + roomName + '\'' +
+                '}';
+    }
 }
