@@ -1,3 +1,4 @@
+import exceptions.InvalidDateException;
 import implementation.DaySchedule;
 import org.junit.jupiter.api.Test;
 import specification.Appointment;
@@ -6,6 +7,8 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DayScheduleTest {
 
@@ -17,8 +20,17 @@ public class DayScheduleTest {
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.now().minusYears(1), LocalDate.now());
 
+        //endDate before startDate exception
         System.out.println(daySchedule.getAppointments());
-        daySchedule.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
+        InvalidDateException ex = assertThrows(InvalidDateException.class, () -> daySchedule.addAppointment(appointment, 1, LocalDate.now(), LocalDate.now().minusWeeks(2)));
+        System.out.println(ex.getMessage());
+
+        //check if everything is added correctly
+        try {
+            daySchedule.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
+        } catch (InvalidDateException e) {
+            e.printStackTrace();
+        }
         System.out.println(daySchedule.getAppointments());
     }
 }

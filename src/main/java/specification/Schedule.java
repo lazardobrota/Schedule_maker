@@ -1,5 +1,6 @@
 package specification;
 
+import exceptions.InvalidDateException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,7 +46,7 @@ public abstract class Schedule {
      * @param day
      * @return boolean that returns TRUE if appointment has been added
      */
-    public abstract boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate);
+    public abstract boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
     /**
      * Removes appointment from list if it exists
