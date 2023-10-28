@@ -21,6 +21,12 @@ public class Room {
         this.roomName = roomName;
     }
 
+    //Clone atributes constructor
+    public Room(Room that) {
+        this.additionally = that.getAdditionally();
+        this.roomName = that.getRoomName();
+    }
+
     //TODO Da li treba i po HashMapi da poredi
     @Override
     public boolean equals(Object obj) {

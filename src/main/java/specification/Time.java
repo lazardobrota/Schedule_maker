@@ -58,6 +58,13 @@ public class Time {
         this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
     }
 
+    //Clone atributes constructor
+    public Time(Time that) {
+        this.additionally = that.getAdditionally();
+        this.startTime = that.getStartTime();
+        this.endTime = that.getEndTime();
+    }
+
     //TODO Da li treba i hashmapa da se proverava
     @Override
     public boolean equals(Object obj) {
