@@ -79,12 +79,24 @@ public class ScheduleByDates extends Schedule {
 
     @Override
     public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) {
-        return false;
+        return getAppointments().remove(appointment);//true if removed, false if it doesnt exist
     }
 
     @Override
     public boolean changeAppointment(Appointment oldAppoint, LocalDate newDate) {
-        return false;
+
+        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
+        newAppoint.getTime().setDate(newDate);
+
+
+        //if Old Appointment doesnt exist in hashset and if new Appointment already exist return false
+        if (!getAppointments().contains(oldAppoint) && getAppointments().contains(newAppoint))
+            return false;
+
+        //Removes old Appointment and add new one
+        getAppointments().remove(oldAppoint);
+        getAppointments().add(newAppoint);
+        return true;
     }
 
     @Override
