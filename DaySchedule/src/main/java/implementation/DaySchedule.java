@@ -6,8 +6,8 @@ import specification.Room;
 import specification.Schedule;
 import specification.Time;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,17 +80,54 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) {
-        return false;
+    public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
+        if (!startDate.equals(endDate))
+            throw new InvalidDateException("Start and end date must be same");
+
+
+        return true;
     }
 
     @Override
-    public boolean changeAppointment(Appointment oldAppoint, LocalDate newDate) {
+    public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
+        /*
+        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
+        newAppoint.getTime().setDate(newDate);
+
+
+        //if Old Appointment doesnt exist in hashset and if new Appointment already exist return false
+        if (!getAppointments().contains(oldAppoint) && getAppointments().contains(newAppoint))
+            return false;
+
+        //Removes old Appointment and add new one
+        getAppointments().remove(oldAppoint);
+        getAppointments().add(newAppoint);
+        return true;
+        */
         return false;
     }
 
+
+
     @Override
-    public boolean search(Appointment appointment) {
-        return false;
+    public List<Appointment> search(LocalDate date, Time time, boolean isAvailable) {
+        return null;
     }
+
+    @Override
+    public List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, boolean isAvailable) {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, Time time, Room room, boolean isAvailable) {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, Room room, boolean isAvailable) {
+        return null;
+    }
+
+
 }
