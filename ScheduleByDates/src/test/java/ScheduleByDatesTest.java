@@ -72,7 +72,7 @@ public class ScheduleByDatesTest {
             System.out.println(scheduleByDates.getAppointments());
 
             appointment.getTime().setDate(LocalDate.now().minusDays(12));
-            scheduleByDates.changeAppointment(appointment, LocalDate.now());
+            scheduleByDates.changeAppointment(appointment, 5, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 17));
             System.out.println(scheduleByDates.getAppointments());
         } catch (InvalidDateException e) {
             e.printStackTrace();
