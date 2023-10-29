@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,7 +31,7 @@ public abstract class Schedule {
         appointments = new HashSet<>();
         exclusiveDays = new ArrayList<>();
         notWorkingDays = new ArrayList<>();
-        
+
         initialization();
     }
 
@@ -48,7 +49,7 @@ public abstract class Schedule {
     public abstract boolean addRooms(Room room);
 
     /**
-     * Add appointment to List if there isnt already that appointment in there
+     * Add appointment to List if there isn't already that appointment in there
      * @param appointment
      * @param day
      * @return boolean that returns TRUE if appointment has been added
@@ -61,7 +62,7 @@ public abstract class Schedule {
      * @param day
      * @return boolean that returns TRUE if appointment has been removed
      */
-    public abstract boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate);
+    public abstract boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
     //TODO Da li treba dva appointmenta ili drugacije provera
     /**
@@ -70,13 +71,30 @@ public abstract class Schedule {
      * @param newDate chagnes date on oldAppoint
      * @return boolean return true if it can remove old one and add new one
      */
-    public abstract boolean changeAppointment(Appointment oldAppoint, LocalDate newDate);
+    public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
     /**
-     * Searches for Appointment in table
-     * @param appointment
-     * @return boolean true if it exists
+     * Searches for Appointment in table with given date
+     * @param date
+     * @param time
+     * @param isAvailable does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
      */
-    public abstract boolean search(Appointment appointment);
+    public abstract List<Appointment> search(LocalDate date, Time time, boolean isAvailable);
+
+    /**
+     * Searches for Appointment in table with given starting and ending dates
+     * @param startDate search from this date
+     * @param endDate search until this date
+     * @param day search for this day
+     * @param time
+     * @param isAvailable does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     */
+    public abstract List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, boolean isAvailable);
+
+    public abstract List<Appointment> search(LocalDate date, Time time, Room room, boolean isAvailable);
+
+    public abstract List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, Room room, boolean isAvailable);
 
 }

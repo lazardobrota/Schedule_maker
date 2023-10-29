@@ -48,14 +48,14 @@ public class Time {
     //Without addicional data(HashMap)
     public Time(LocalTime startTime, long minutsToAdd) {
         this.startTime = startTime;
-        this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
+        this.endTime = startTime.plusMinutes(minutsToAdd); // adds minuts to date to be "from to"
     }
 
     //FOR TESTING
     public Time(LocalDate date, LocalTime startTime, long minutsToAdd) {
         this.date = date;
         this.startTime = startTime;
-        this.endTime = startTime.plus(Duration.of(minutsToAdd, ChronoUnit.MINUTES)); // adds minuts to date to be "from to"
+        this.endTime = startTime.plusMinutes(minutsToAdd); // adds minuts to date to be "from to"
     }
 
     //Clone atributes constructor
@@ -80,11 +80,11 @@ public class Time {
         if (this == that)
             return true;
 
-        //If their START hour or minuts are different they are not the same
+        //If their START hour or minutes are different they are not the same
         if (this.getStartTime().getHour() != that.getStartTime().getHour() || this.getStartTime().getMinute() != that.getStartTime().getMinute())
             return false;
 
-        //If their END hour or minuts are different they are not the same
+        //If their END hour or minutes are different they are not the same
         if (this.getEndTime().getHour() != that.getEndTime().getHour() || this.getEndTime().getMinute() != that.getEndTime().getMinute())
             return false;
 
