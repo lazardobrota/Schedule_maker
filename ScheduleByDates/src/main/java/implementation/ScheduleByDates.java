@@ -34,7 +34,7 @@ public class ScheduleByDates extends Schedule {
         day %= 7; //it has 7 days in the week
 
         if (day <= 0)
-            day += 7; // 0 Saturday, -1 Sunday,...
+            day += 7; // 0 Sunday, -1 Saturday,...
 
         //How many days between startDate and day we want, it only works if day is ahead then startDate
         int addDays = day - startDate.getDayOfWeek().getValue();
@@ -116,6 +116,20 @@ public class ScheduleByDates extends Schedule {
     //TODO doesn't remove old appointment
     @Override
     public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
+        /*
+        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
+        newAppoint.getTime().setDate(newDate);
+
+
+        //if Old Appointment doesnt exist in hashset and if new Appointment already exist return false
+        if (!getAppointments().contains(oldAppoint) && getAppointments().contains(newAppoint))
+            return false;
+
+        //Removes old Appointment and add new one
+        getAppointments().remove(oldAppoint);
+        getAppointments().add(newAppoint);
+        return true;
+        */
 
         weeksBetween(startDate, endDate); // throws exception
 
