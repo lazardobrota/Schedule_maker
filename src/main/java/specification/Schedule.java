@@ -35,6 +35,30 @@ public abstract class Schedule {
         initialization();
     }
 
+    //TODO Da li je bolje imati exception ili boolean
+    //Call this function to check parametars of dates
+    protected boolean isValidDate(LocalDate date) throws InvalidDateException {
+        //For weekend
+        //For Sunday and isn't an exclusive day
+        if (date.getDayOfWeek().getValue() == 7 && !exclusiveDays.contains(date)) {
+            return false;
+            //throw new InvalidDateException("Sunday(7), isn't working date");
+        }
+        //If it's Saturday and isn't an exclusive day
+        if (date.getDayOfWeek().getValue() == 6 && !exclusiveDays.contains(date)) {
+            return false;
+            //throw new InvalidDateException("Saturday(6), isn't working date");
+        }
+
+        //Isn't between start and end date of table
+        if (date.isBefore(this.getStartDate()) || date.isAfter(this.getEndDate())) {
+            return false;
+            //throw new InvalidDateException("Put date inside range of table");
+        }
+
+        return true;
+    }
+
     //TODO Fix documentation arguments
     /**
      * initializes empty table and fills list of all Exclusive days(Working Sundays) and Not working days (doesn't include Sunday and Saturday)
@@ -68,7 +92,6 @@ public abstract class Schedule {
     /**
      * Check if old appointment exist and sets date to new date if it isnt already taken
      * @param oldAppoint needs to be removed
-     * @param newDate chagnes date on oldAppoint
      * @return boolean return true if it can remove old one and add new one
      */
     public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
