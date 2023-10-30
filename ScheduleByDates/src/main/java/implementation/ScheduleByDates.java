@@ -76,7 +76,9 @@ public class ScheduleByDates extends Schedule {
             appoint.getTime().setDate(date); //sets its date
 
             //Already has one of the days as appointment, so it fails, or because date isn't valid in some way
-            if (getAppointments().contains(appoint) || !isValidDate(date))
+            if (!isValidDate(date))
+                return false;
+            if (getAppointments().contains(appoint))
                 return false;
 
             appointmentList.add(appoint);
@@ -101,7 +103,9 @@ public class ScheduleByDates extends Schedule {
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
             appoint.getTime().setDate(date);
 
-            //Doesn't have one of the days as appointment, so it fails
+            //Doesn't have one of the days as appointment, so it fails, or because date isn't valid in some way
+            if (!isValidDate(date))
+                return false;
             if (!getAppointments().contains(appoint))
                 return false;
 

@@ -28,27 +28,24 @@ public class ScheduleByDatesTest {
         System.out.println(scheduleByDates.getRooms());
     }
     @Test
-    public void addAppointmentTest() {
+    public void addAppointmentTest() throws InvalidDateException {
         Room room = new Room("raf1");
         Time time = new Time(LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
-        /*
+
         //endDate before startDate exception
         System.out.println(scheduleByDates.getAppointments());
         InvalidDateException ex = assertThrows(InvalidDateException.class, () -> scheduleByDates.addAppointment(appointment, 1, LocalDate.now(), LocalDate.now().minusWeeks(2)));
         System.out.println(ex.getMessage());
 
         //check if everything is added correctly
-        try {
-            scheduleByDates.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
-        } catch (InvalidDateException e) {
-            e.printStackTrace();
-        }
+        scheduleByDates.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
         System.out.println(scheduleByDates.getAppointments());
-         */
+
+        scheduleByDates.getAppointments().clear();//clear list
 
         //klasa ekvivalencije
         assertAll(
@@ -62,11 +59,20 @@ public class ScheduleByDatesTest {
                 () -> assertTrue(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 25)))
         );
 
+        scheduleByDates.getAppointments().clear();//clear list
 
         //analiza granicnih vrednosti
-//        assertAll(
-//                () ->
-//        );
+        assertAll(
+                () -> assertFalse(scheduleByDates.addAppointment(appointment, 2, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 2))),
+                () -> assertTrue(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 1))),
+                () -> assertTrue(scheduleByDates.addAppointment(appointment, 4, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 10, 30))),
+                () -> assertFalse(scheduleByDates.addAppointment(appointment, 3, LocalDate.of(2023, 5, 31), LocalDate.of(2023, 10, 2)))
+        );
+
+        scheduleByDates.getAppointments().clear();//clear list
+
+        //Nagadjanje gresaka
+        assertTrue(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 5)));
     }
 
     @Test
@@ -91,7 +97,7 @@ public class ScheduleByDatesTest {
 
 
         //Check with addAppointment method
-        //TODO This only works on 28.10.2023., next day this code wont work since monday wont be beofre 12 days
+        //TODO This only works on 28.10.2023., next day this code wont work since monday wont be before 12 days
         try {
             scheduleByDates.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
             System.out.println(scheduleByDates.getAppointments());
