@@ -75,8 +75,8 @@ public class ScheduleByDates extends Schedule {
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
             appoint.getTime().setDate(date); //sets its date
 
-            //Already has one of the days as appointment, so it fails
-            if (getAppointments().contains(appoint))
+            //Already has one of the days as appointment, so it fails, or because date isn't valid in some way
+            if (getAppointments().contains(appoint) || !isValidDate(date))
                 return false;
 
             appointmentList.add(appoint);
@@ -89,7 +89,7 @@ public class ScheduleByDates extends Schedule {
     }
 
     //TODO Does it have to remove all of them or if one of them doesn't exist don't remove any?
-    //TODO Add appointemnts without removing old ones
+    //TODO Add appointments without removing old ones
     @Override
     public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
@@ -102,7 +102,7 @@ public class ScheduleByDates extends Schedule {
             appoint.getTime().setDate(date);
 
             //Doesn't have one of the days as appointment, so it fails
-            if (getAppointments().contains(appoint))
+            if (!getAppointments().contains(appoint))
                 return false;
 
             appointmentList.add(appoint);
@@ -113,6 +113,7 @@ public class ScheduleByDates extends Schedule {
         return true;
     }
 
+    //TODO doesn't remove old appointment
     @Override
     public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
 

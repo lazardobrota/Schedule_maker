@@ -33,8 +33,9 @@ public class ScheduleByDatesTest {
         Time time = new Time(LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
-        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.now().minusYears(1), LocalDate.now());
-
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        /*
         //endDate before startDate exception
         System.out.println(scheduleByDates.getAppointments());
         InvalidDateException ex = assertThrows(InvalidDateException.class, () -> scheduleByDates.addAppointment(appointment, 1, LocalDate.now(), LocalDate.now().minusWeeks(2)));
@@ -47,6 +48,30 @@ public class ScheduleByDatesTest {
             e.printStackTrace();
         }
         System.out.println(scheduleByDates.getAppointments());
+         */
+
+        //klasa ekvivalencije
+        assertAll(
+                //End date before start date
+                () -> assertThrows(InvalidDateException.class, () -> scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2023, 10, 30), LocalDate.of(2023, 10, 10))),
+
+                //Dates before, that table doesn't support
+                () -> assertFalse(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2022, 10, 10), LocalDate.of(2022, 10, 30))),
+                //Dates after, that table doesn't support
+                () -> assertFalse(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2024, 10, 10), LocalDate.of(2024, 10, 30))),
+                () -> assertTrue(scheduleByDates.addAppointment(appointment, 1, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 25)))
+        );
+
+
+        //analiza granicnih vrednosti
+//        assertAll(
+//                () ->
+//        );
+    }
+
+    @Test
+    public void removeAppointmentTest() {
+
     }
 
     @Test
