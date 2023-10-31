@@ -103,13 +103,14 @@ public class ScheduleByDates extends Schedule {
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
             appoint.getTime().setDate(date);
 
-            //Doesn't have one of the days as appointment, so it fails, or because date isn't valid in some way
+            //Because date isn't valid in some way
             if (!isValidDate(date))
                 return false;
-            if (!getAppointments().contains(appoint))
-                return false;
 
-            appointmentList.add(appoint);
+            //Add to list if exist in hashset
+            if (getAppointments().contains(appoint))
+                appointmentList.add(appoint);
+
             date = date.plusDays(7);
         }
 
@@ -118,6 +119,7 @@ public class ScheduleByDates extends Schedule {
     }
 
     //TODO doesn't remove old appointment
+    //TODO add start and end date to Time class, every creation in addAppointment will have the same address to those to so when one is change the rest will change automatically
     @Override
     public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
         /*
