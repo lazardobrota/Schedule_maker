@@ -6,6 +6,7 @@ import specification.Room;
 import specification.Schedule;
 import specification.Time;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -37,6 +38,8 @@ public class ScheduleByDates extends Schedule {
             day += 7; // 0 Sunday, -1 Saturday,...
 
         //How many days between startDate and day we want, it only works if day is ahead then startDate
+        int test = startDate.getDayOfWeek().getValue();
+        DayOfWeek hello = startDate.getDayOfWeek();
         int addDays = day - startDate.getDayOfWeek().getValue();
 
         //If startDate is ahead then go backwards to the day given and add 7 day to go to the next week of that day
@@ -92,7 +95,6 @@ public class ScheduleByDates extends Schedule {
     }
 
     //TODO Does it have to remove all of them or if one of them doesn't exist don't remove any?
-    //TODO Add appointments without removing old ones
     @Override
     public boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
@@ -120,37 +122,37 @@ public class ScheduleByDates extends Schedule {
         return true;
     }
 
-    //TODO doesn't remove old appointment
-    //TODO add start and end date to Time class, every creation in addAppointment will have the same address to those to so when one is change the rest will change automatically
     @Override
-    public boolean changeAppointment(Appointment oldAppoint, int day, Appointment newAppoint) throws InvalidDateException{
-        /*
-        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
-        newAppoint.getTime().setDate(newDate);
+    public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
 
+        //Sets startDates to start from given day
+        oldAppoint.getTime().setStartDate(findDateWithDay(oldAppoint.getTime().getStartDate(), day));
+        startDate = findDateWithDay(startDate, day);
 
-        //if Old Appointment doesnt exist in hashset and if new Appointment already exist return false
-        if (!getAppointments().contains(oldAppoint) && getAppointments().contains(newAppoint))
+        int oldWeeksBetween = weeksBetween(oldAppoint.getTime().getStartDate(), oldAppoint.getTime().getEndDate()); //old, throws exception
+        int newWeeksBetween = weeksBetween(startDate, endDate); //new, throws exception
+
+        //Took more old dates and less new dates, so old dates can't fit in range of new dates
+        if (oldWeeksBetween > newWeeksBetween)
+            throw new InvalidDateException("New range needs to be bigger");
+
+        //If newDate has bigger range, lower it to the same range as oldDate
+        endDate = endDate.minusWeeks(newWeeksBetween - oldWeeksBetween);
+
+        //If possible, remove all old appointments in that range
+        if (!removeAppointment(oldAppoint, day)) {
             return false;
+        }
 
-        //Removes old Appointment and add new one
-        getAppointments().remove(oldAppoint);
-        getAppointments().add(newAppoint);
-        return true;
-        */
+        Appointment newAppoint = new Appointment(oldAppoint.getRoom(), oldAppoint.getTime());
+        newAppoint.getTime().setStartDate(startDate);
+        newAppoint.getTime().setEndDate(endDate);
+        if (!addAppointment(newAppoint, day)) {
+            //if it can't add new dates then
+            addAppointment(oldAppoint, day);
+            return false;
+        }
 
-//        weeksBetween(startDate, endDate); // throws exception
-//
-//        //If some don't exist then it doesn't remove any
-//        if (!removeAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate()))
-//            return false;
-//
-//        //If some already exist don't add any
-//        if (!addAppointment(oldAppoint, day, startDate, endDate)) {
-//            //Add back old appointments
-//            addAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate());
-//            return false;
-//        }
         return true;
     }
 
