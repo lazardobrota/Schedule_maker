@@ -94,7 +94,7 @@ public abstract class Schedule {
      * @param oldAppoint needs to be removed
      * @return boolean return true if it can remove old one and add new one
      */
-    public abstract boolean changeAppointment(Appointment oldAppoint, int day, Appointment newAppoint) throws InvalidDateException;
+    public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
     /**
      * Searches for Appointment in table with given date
