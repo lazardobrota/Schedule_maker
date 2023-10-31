@@ -42,7 +42,7 @@ public class ScheduleByDatesTest {
         System.out.println(ex.getMessage());
 
         //check if everything is added correctly
-        scheduleByDates.addAppointment(appointment, 1);
+        scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);
         System.out.println(scheduleByDates.getAppointments());
 
         scheduleByDates.getAppointments().clear();//clear list
@@ -103,6 +103,7 @@ public class ScheduleByDatesTest {
 
         scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);
         System.out.println(scheduleByDates.getAppointments());
+
         //analiza granicnih vrednosti
         assertAll(
                 () -> assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 2)), 2)),
@@ -120,19 +121,31 @@ public class ScheduleByDatesTest {
     @Test
     public void changeAppointmentTest() throws InvalidDateException {
         Room room = new Room("raf1");
-        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 10), LocalTime.now(), LocalTime.now().plusHours(2));
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
-        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.now().minusYears(1), LocalDate.now());
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
 
         //Check if it has been changes
         scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);
-        System.out.println(scheduleByDates.getAppointments());
+        System.out.println("Original:\n" + scheduleByDates.getAppointments());
 
-        Appointment newAppoint = new Appointment(room, time);
-        scheduleByDates.changeAppointment(appointment, 5, setDateAppoint(newAppoint, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)));
-        System.out.println(scheduleByDates.getAppointments());
+        //Simple change with same amount of range
+        assertTrue(scheduleByDates.changeAppointment(appointment, 1, LocalDate.of(2023, 11, 10), LocalDate.of(2023, 11, 30)));
+        System.out.println("Same range: \n" + scheduleByDates.getAppointments());
 
+
+        //New Appointment has bigger range
+        assertTrue(scheduleByDates.changeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 11, 10), LocalDate.of(2023, 11, 30)),
+                1, LocalDate.of(2023, 9, 10), LocalDate.of(2023, 10, 30)));
+        System.out.println("newAppoint bigger range: \n" + scheduleByDates.getAppointments());
+
+        //New Appointment has shorter range
+        InvalidDateException ex = assertThrows(InvalidDateException.class, () -> scheduleByDates.changeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 9, 10), LocalDate.of(2023, 9, 30)),
+                1, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 15)));
+
+        System.out.println(ex.getMessage());
+        System.out.println(scheduleByDates.getAppointments());
 
         //Check with addAppointment method
         //TODO This only works on 28.10.2023., next day this code wont work since monday wont be before 12 days
