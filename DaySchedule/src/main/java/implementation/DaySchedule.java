@@ -29,17 +29,17 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
+    public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         return true;
     }
 
     @Override
-    public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
+    public boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException{
         return true;
     }
 
     @Override
-    public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
+    public boolean changeAppointment(Appointment oldAppoint, int day, Appointment newAppoint) throws InvalidDateException {
         return false;
     }
 

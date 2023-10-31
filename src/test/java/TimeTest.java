@@ -13,15 +13,15 @@ public class TimeTest {
     //Check if minutsToAdd works
     @Test
     public void checkToDate() {
-        Time time = new Time(LocalDate.now(), LocalTime.now(), 120);
+        Time time = new Time(LocalDate.now(), LocalDate.now(), LocalTime.now(), 120);
         LocalTime test = LocalTime.now().plusMinutes(120);
         assertEquals(test.getHour(), time.getEndTime().getHour());
     }
 
     @Test
     public void areTimeClassesSame() {
-        Time time = new Time(LocalDate.now(), LocalTime.now(), 120);
-        Time time2 = new Time(LocalDate.now(), LocalTime.now(), 120);
+        Time time = new Time(LocalDate.now(), LocalDate.now(), LocalTime.now(), 120);
+        Time time2 = new Time(LocalDate.now(), LocalDate.now(), LocalTime.now(), 120);
 
         assertEquals(time, time2);
 

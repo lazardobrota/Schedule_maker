@@ -60,20 +60,21 @@ public class ScheduleByDates extends Schedule {
     }
 
     @Override
-    public boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
+    public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
 
         //Check rules
 
-        LocalDate date = findDateWithDay(startDate, day);
-        int weeks = weeksBetween(date, endDate); //throws exception
+        LocalDate date = findDateWithDay(appointment.getTime().getStartDate(), day);//find date of that day starting from startDate
+        int weeks = weeksBetween(date, appointment.getTime().getEndDate()); //throws exception
 
         //Makes appointments
 
         for (int i = 0; i <= weeks; i++) {
             //Makes new appointment, calls copy Constructor
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
-            appoint.getTime().setDate(date); //sets its date
+            appoint.getTime().setStartDate(date); //sets its date
+            appoint.getTime().setEndDate(date); //sets its date
 
             //Already has one of the days as appointment, so it fails, or because date isn't valid in some way
             if (!isValidDate(date))
@@ -93,15 +94,16 @@ public class ScheduleByDates extends Schedule {
     //TODO Does it have to remove all of them or if one of them doesn't exist don't remove any?
     //TODO Add appointments without removing old ones
     @Override
-    public boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
+    public boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
 
-        LocalDate date = findDateWithDay(startDate, day);
-        int weeks = weeksBetween(date, endDate); //throws exception
+        LocalDate date = findDateWithDay(appointment.getTime().getStartDate(), day);
+        int weeks = weeksBetween(date, appointment.getTime().getEndDate()); //throws exception
 
         for (int i = 0; i <= weeks; i++) {
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
-            appoint.getTime().setDate(date);
+            appoint.getTime().setStartDate(date);
+            appoint.getTime().setEndDate(date);
 
             //Because date isn't valid in some way
             if (!isValidDate(date))
@@ -121,7 +123,7 @@ public class ScheduleByDates extends Schedule {
     //TODO doesn't remove old appointment
     //TODO add start and end date to Time class, every creation in addAppointment will have the same address to those to so when one is change the rest will change automatically
     @Override
-    public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException{
+    public boolean changeAppointment(Appointment oldAppoint, int day, Appointment newAppoint) throws InvalidDateException{
         /*
         Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
         newAppoint.getTime().setDate(newDate);
@@ -137,18 +139,18 @@ public class ScheduleByDates extends Schedule {
         return true;
         */
 
-        weeksBetween(startDate, endDate); // throws exception
-
-        //If some don't exist then it doesn't remove any
-        if (!removeAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate()))
-            return false;
-
-        //If some already exist don't add any
-        if (!addAppointment(oldAppoint, day, startDate, endDate)) {
-            //Add back old appointments
-            addAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate());
-            return false;
-        }
+//        weeksBetween(startDate, endDate); // throws exception
+//
+//        //If some don't exist then it doesn't remove any
+//        if (!removeAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate()))
+//            return false;
+//
+//        //If some already exist don't add any
+//        if (!addAppointment(oldAppoint, day, startDate, endDate)) {
+//            //Add back old appointments
+//            addAppointment(oldAppoint, oldAppoint.getTime().getDate().getDayOfWeek().getValue(), oldAppoint.getTime().getDate(), oldAppoint.getTime().getDate());
+//            return false;
+//        }
         return true;
     }
 

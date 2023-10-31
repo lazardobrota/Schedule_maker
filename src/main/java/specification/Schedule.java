@@ -78,7 +78,7 @@ public abstract class Schedule {
      * @param day
      * @return boolean that returns TRUE if appointment has been added
      */
-    public abstract boolean addAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
+    public abstract boolean addAppointment(Appointment appointment, int day) throws InvalidDateException;
 
     /**
      * Removes appointment from list if it exists
@@ -86,7 +86,7 @@ public abstract class Schedule {
      * @param day
      * @return boolean that returns TRUE if appointment has been removed
      */
-    public abstract boolean removeAppointment(Appointment appointment, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
+    public abstract boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException;
 
     //TODO Da li treba dva appointmenta ili drugacije provera
     /**
@@ -94,7 +94,7 @@ public abstract class Schedule {
      * @param oldAppoint needs to be removed
      * @return boolean return true if it can remove old one and add new one
      */
-    public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
+    public abstract boolean changeAppointment(Appointment oldAppoint, int day, Appointment newAppoint) throws InvalidDateException;
 
     /**
      * Searches for Appointment in table with given date
