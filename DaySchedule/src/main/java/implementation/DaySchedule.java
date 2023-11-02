@@ -45,17 +45,17 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
