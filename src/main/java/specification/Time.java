@@ -26,12 +26,6 @@ public class Time {
     //Constructor will accept bool which tells if true that its 10-12h time, else it tells that its 10h + 2 so then i will change it to 10-12h
     //Constructor gets LocalDate, startTime, endTime, bool isEndTime
     //Time "from to", meaning 10-12h
-//    public Time(HashMap<String, String> additionally, LocalTime startTime, LocalTime endTime) {
-//        this.additionally = additionally;
-//        this.startTime = startTime;
-//        this.endTime = endTime;
-//    }
-
     public Time(HashMap<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.additionally = additionally;
         this.startDate = startDate;
@@ -48,15 +42,7 @@ public class Time {
         this.endTime = endTime;
     }
 
-    //Without addicional data(HashMap)
-//    public Time(LocalTime startTime, LocalTime endTime) {
-//        this.startTime = startTime;
-//        this.endTime = endTime;
-//    }
-
     //Time "from + how" much, meaning 10h + 2 == 10-12h
-
-
     public Time(HashMap<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
         this.additionally = additionally;
         this.startDate = startDate;
@@ -65,24 +51,13 @@ public class Time {
         this.endTime = startTime.plusMinutes(minutesToAdd);// adds minuts to date to be "from to"
     }
 
+    //Without addicional data(HashMap)
     public Time(LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
         this.endTime = startTime.plusMinutes(minutesToAdd); // adds minuts to date to be "from to"
     }
-
-//    public Time(HashMap<String, String> additionally, LocalTime startTime, long minutsToAdd) {
-//        this.additionally = additionally;
-//        this.startTime = startTime;
-//        this.endTime = startTime.plusMinutes(minutsToAdd);// adds minuts to date to be "from to"
-//    }
-//
-//    //Without addicional data(HashMap)
-//    public Time(LocalTime startTime, long minutsToAdd) {
-//        this.startTime = startTime;
-//        this.endTime = startTime.plusMinutes(minutsToAdd); // adds minuts to date to be "from to"
-//    }
 
 
     //Clone atributes constructor
