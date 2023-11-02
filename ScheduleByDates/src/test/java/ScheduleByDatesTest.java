@@ -29,6 +29,54 @@ public class ScheduleByDatesTest {
         assertTrue(scheduleByDates.addRooms(room2));
         System.out.println(scheduleByDates.getRooms());
     }
+
+    @Test
+    public void searchDate() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.addAppointment(appointment, 1);
+
+        //Without first one
+        time.setStartDate(LocalDate.of(2023, 10, 18));
+        List<Appointment> a = scheduleByDates.search(time, 1, false);
+        println(a);
+        assertEquals(2, a.size());
+
+        //Withou last and first
+        time.setEndDate(LocalDate.of(2023, 10, 25));
+        a = scheduleByDates.search(time, 1, false);
+        println(a);
+        assertEquals(1, a.size());
+
+        //None selected
+        setDateAppoint(appointment, LocalDate.of(2023, 9, 1), LocalDate.of(2023, 9, 30));
+        a = scheduleByDates.search(time, 1, false);
+        println(a);
+        assertEquals(0, a.size());
+    }
+
+    @Test
+    public void searchDateTime() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.addAppointment(appointment, 1);
+
+        time.setEndTime(LocalTime.of(14, 0));
+        List<Appointment> a = scheduleByDates.search(time, 1, false);
+        println(a);
+        assertEquals(0, a.size());
+    }
+
     @Test
     public void addAppointmentTest() throws InvalidDateException {
         Room room = new Room("raf1");
@@ -188,5 +236,7 @@ public class ScheduleByDatesTest {
         for (Appointment a: appointmentList) {
             System.out.println(a);
         }
+
+        System.out.println("\n\n\n");
     }
 }

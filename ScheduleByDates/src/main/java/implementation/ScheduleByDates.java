@@ -8,7 +8,6 @@ import specification.Time;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -158,19 +157,71 @@ public class ScheduleByDates extends Schedule {
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException{
+        List<Appointment> appointmentList = new ArrayList<>();
+        List<Time> times = makeTimes(time, day);
+
+
+        for (Time t : times) {
+            for (Appointment a: getAppointments()) {
+                //If true then we found element
+                if (compareTime(a.getTime(), t))
+                    appointmentList.add(a);
+
+            }
+        }
+        return appointmentList;
+    }
+
+    @Override
+    public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
-    @Override
-    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) {
-        return null;
+    //Takes range of time and makes more one day times
+    private List<Time> makeTimes(Time time, int day) throws InvalidDateException{
+        List<Time> times = new ArrayList<>();
+
+        LocalDate date = findDateWithDay(time.getStartDate(), day);
+        int weeks = weeksBetween(date, time.getEndDate()); //throws exception
+
+        for (int i = 0; i <= weeks; i++) {
+            Time t = new Time(time);
+            t.setStartDate(date);
+            t.setEndDate(date);
+
+            times.add(t);
+
+            date = date.plusDays(7);
+        }
+
+        return times;
     }
 
+    private boolean compareTime(Time time, Time time2) {
+        //Different with overridden equals method
+        if (!time.equals(time2))
+            return false;
 
+        //Doesn't look for anything in hashMap
+        if (time2.getAdditionally() == null)
+            return true;
+
+        //Looking for additional that doesn't exist at all
+        if (time.getAdditionally() == null)
+            return false;
+
+        for (Map.Entry<String, String> set : time2.getAdditionally().entrySet()) {
+            //If our element doesn't have that key, or they are not the same, return false
+            if (!time.getAdditionally().containsKey(set.getKey()) || !time.getAdditionally().get(set.getKey()).equals(set.getValue()))
+                return false;
+        }
+
+        return true;
+    }
 }
