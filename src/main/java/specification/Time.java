@@ -59,6 +59,11 @@ public class Time {
         this.endTime = startTime.plusMinutes(minutesToAdd); // adds minuts to date to be "from to"
     }
 
+    //Just dates for range when doing search
+    public Time(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 
     //Clone atributes constructor
     public Time(Time that) {
@@ -70,7 +75,7 @@ public class Time {
     }
 
     //TODO Date i vreme mora da se proveri da li se preklapa sa drugim vremenom, mozda je jedna 10.10.2023. - 12.10.2023. 10-12h raf1, a drugi 11.10.2023. 10-12h raf1
-    // to je i dalje preklaanje
+    // to je i dalje preklaanje, isto i za vreme vazi
     @Override
     public boolean equals(Object obj) {
         if (obj == null)
@@ -85,13 +90,17 @@ public class Time {
         if (this == that)
             return true;
 
-        //If their START hour or minutes are different they are not the same
-        if (this.getStartTime().getHour() != that.getStartTime().getHour() || this.getStartTime().getMinute() != that.getStartTime().getMinute())
-            return false;
+        if (this.getStartTime() != null && that.getStartTime() != null) {
+            //If their START hour or minutes are different they are not the same
+            if (this.getStartTime().getHour() != that.getStartTime().getHour() || this.getStartTime().getMinute() != that.getStartTime().getMinute())
+                return false;
+        }
 
-        //If their END hour or minutes are different they are not the same
-        if (this.getEndTime().getHour() != that.getEndTime().getHour() || this.getEndTime().getMinute() != that.getEndTime().getMinute())
-            return false;
+        if (this.getEndTime() != null && that.getEndTime() != null) {
+            //If their END hour or minutes are different they are not the same
+            if (this.getEndTime().getHour() != that.getEndTime().getHour() || this.getEndTime().getMinute() != that.getEndTime().getMinute())
+                return false;
+        }
 
         //If they are not the same date
         if (!this.getStartDate().equals(that.getStartDate()) || !this.getEndDate().equals(that.getEndDate()))
