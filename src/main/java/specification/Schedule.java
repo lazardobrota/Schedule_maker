@@ -106,11 +106,11 @@ public abstract class Schedule {
      * @param isAvailable does user want available appointments or list of all appointments
      * @return List of appointment that satisfy conditions
      */
-    public abstract List<Appointment> search(Time time, int day, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException;
 
-    public abstract List<Appointment> search(Time time, int day, Room room, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException;
 
-    public abstract List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
     /* For PriorityQueue
     public List<Appointment> getAppointmentsToList() {
