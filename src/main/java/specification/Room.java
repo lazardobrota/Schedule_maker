@@ -1,10 +1,12 @@
 package specification;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 
 @Getter
+@Setter
 public class Room {
     //todo dodatni resursi i kapacitet
     private HashMap<String, String> additionally;//additional columns

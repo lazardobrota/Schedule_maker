@@ -1,5 +1,6 @@
 import exceptions.InvalidDateException;
 import implementation.ScheduleByDates;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import specification.Appointment;
 import specification.Room;
@@ -7,6 +8,7 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,16 +90,15 @@ public class ScheduleByDatesTest {
         scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);
         System.out.println(scheduleByDates.getAppointments());
         //klasa ekvivalencije
-        assertAll(
-                //End date before start date
-                () -> assertThrows(InvalidDateException.class, () -> scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 30), LocalDate.of(2023, 10, 10)), 1)),
 
-                //Dates before, that table doesn't support
-                () -> assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2022, 10, 10), LocalDate.of(2022, 10, 30)), 1)),
-                //Dates after, that table doesn't support
-                () -> assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2024, 10, 10), LocalDate.of(2024, 10, 30)), 1)),
-                () -> assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 25)), 1))
-        );
+        //End date before start date
+        assertThrows(InvalidDateException.class, () -> scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 30), LocalDate.of(2023, 10, 10)), 1));
+
+        //Dates before, that table doesn't support
+        assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2022, 10, 10), LocalDate.of(2022, 10, 30)), 1));
+        //Dates after, that table doesn't support
+        assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2024, 10, 10), LocalDate.of(2024, 10, 30)), 1));
+        assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 25)), 1));
         System.out.println(scheduleByDates.getAppointments() + "\n\n");
         scheduleByDates.getAppointments().clear();//clear list
 
@@ -105,17 +106,43 @@ public class ScheduleByDatesTest {
         System.out.println(scheduleByDates.getAppointments());
 
         //analiza granicnih vrednosti
-        assertAll(
-                () -> assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 2)), 2)),
-                () -> assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 1)), 1)),
-                () -> assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 10, 30)), 4)),
-                () -> assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 5, 31), LocalDate.of(2023, 10, 2)), 3))
-        );
+        assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 2)), 2));
+        assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 1)), 1));
+        assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 10, 30)), 4));
+        assertFalse(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 5, 31), LocalDate.of(2023, 10, 2)), 3));
         System.out.println(scheduleByDates.getAppointments());
 
         //Nagadjanje gresaka
         //iako je van datuma ponedelja se ne nalazi van, poslednji put je 2023.12.31
         assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 5)), 1));
+    }
+
+    @Test
+    @Disabled
+    public void sortTest() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 12, 30), LocalTime.now(), LocalTime.now().plusHours(2));
+        Appointment appointment = new Appointment(room, time);
+
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
+
+
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+
+        System.out.println("\n\n\n");
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 9, 30)), 5);
+        println(scheduleByDates.getAppointments());
+
+        System.out.println("\nClear\n\n\n");
+        scheduleByDates.getAppointments().clear();
+        scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 12, 30)), 5);
+
+        println(scheduleByDates.getAppointments());
+        System.out.println("\n\n\n");
+        scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 6, 1), LocalDate.of(2023, 9, 30)), 5);
+        println(scheduleByDates.getAppointments());
     }
 
     @Test
@@ -149,21 +176,17 @@ public class ScheduleByDatesTest {
 
         //Check with addAppointment method
         //TODO This only works on 28.10.2023., next day this code wont work since monday wont be before 12 days
-//        try {
-//            scheduleByDates.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
-//            System.out.println(scheduleByDates.getAppointments());
-//
-//            appointment.getTime().setDate(LocalDate.now().minusDays(12));
-//            scheduleByDates.changeAppointment(appointment, 5, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 17));
-//            System.out.println(scheduleByDates.getAppointments());
-//        } catch (InvalidDateException e) {
-//            e.printStackTrace();
-//        }
     }
 
     private Appointment setDateAppoint(Appointment appointment, LocalDate startDate, LocalDate endDate) {
         appointment.getTime().setStartDate(startDate);
         appointment.getTime().setEndDate(endDate);
         return appointment;
+    }
+
+    private void println(List<Appointment> appointmentList) {
+        for (Appointment a: appointmentList) {
+            System.out.println(a);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package specification;
 
 import exceptions.InvalidDateException;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.PriorityQueue;
 
 @Getter
 @Setter
@@ -19,7 +21,11 @@ public abstract class Schedule {
     private LocalDate endDate;
 
     private HashSet<Room> rooms;//hashSet so there is only one of every class
-    private HashSet<Appointment> appointments; //every index represents one row
+
+    //internally it will be pq, so it sorts in O(nlogn)
+    //private PriorityQueue<Appointment> appointments; //every index represents one row
+
+    private List<Appointment> appointments; //every index represents one row
     private List<LocalDate> exclusiveDays; // Working Sundays
     private List<LocalDate> notWorkingDays; // doesn't include Sunday and Saturday
 
@@ -28,7 +34,7 @@ public abstract class Schedule {
         this.endDate = endDate;
 
         rooms = new HashSet<>();
-        appointments = new HashSet<>();
+        appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
         notWorkingDays = new ArrayList<>();
 
@@ -120,4 +126,15 @@ public abstract class Schedule {
 
     public abstract List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, Room room, boolean isAvailable);
 
+    /* For PriorityQueue
+    public List<Appointment> getAppointmentsToList() {
+        List<Appointment> appointmentList = new ArrayList<>();
+
+        while (!appointments.isEmpty()) {
+            appointmentList.add(appointments.poll());
+        }
+
+        return appointmentList;
+    }
+     */
 }

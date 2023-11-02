@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class ScheduleByDates extends Schedule {
         return weeksBetween;
     }
 
+    //adds all or none
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
@@ -91,10 +93,11 @@ public class ScheduleByDates extends Schedule {
 
         //All appointments are
         getAppointments().addAll(appointmentList);
+        Collections.sort(getAppointments());
         return true;
     }
 
-    //TODO Does it have to remove all of them or if one of them doesn't exist don't remove any?
+    //it removes all in that range
     @Override
     public boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
@@ -119,6 +122,7 @@ public class ScheduleByDates extends Schedule {
         }
 
         getAppointments().removeAll(appointmentList);
+        Collections.sort(getAppointments());
         return true;
     }
 
