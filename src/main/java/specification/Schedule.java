@@ -7,10 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 @Getter
 @Setter
@@ -103,28 +100,17 @@ public abstract class Schedule {
     public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
     /**
-     * Searches for Appointment in table with given date
-     * @param date
-     * @param time
-     * @param isAvailable does user want available appointments or list of all appointments
-     * @return List of appointment that satisfy conditions
-     */
-    public abstract List<Appointment> search(LocalDate date, Time time, boolean isAvailable);
-
-    /**
      * Searches for Appointment in table with given starting and ending dates
-     * @param startDate search from this date
-     * @param endDate search until this date
      * @param day search for this day
      * @param time
      * @param isAvailable does user want available appointments or list of all appointments
      * @return List of appointment that satisfy conditions
      */
-    public abstract List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, boolean isAvailable);
 
-    public abstract List<Appointment> search(LocalDate date, Time time, Room room, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, Room room, boolean isAvailable);
 
-    public abstract List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, Room room, boolean isAvailable);
+    public abstract List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable);
 
     /* For PriorityQueue
     public List<Appointment> getAppointmentsToList() {

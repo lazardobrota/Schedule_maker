@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DaySchedule extends Schedule {
@@ -43,25 +44,18 @@ public class DaySchedule extends Schedule {
         return false;
     }
 
-
-
     @Override
-    public List<Appointment> search(LocalDate date, Time time, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, boolean isAvailable) {
         return null;
     }
 
     @Override
-    public List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) {
         return null;
     }
 
     @Override
-    public List<Appointment> search(LocalDate date, Time time, Room room, boolean isAvailable) {
-        return null;
-    }
-
-    @Override
-    public List<Appointment> search(LocalDate startDate, LocalDate endDate, int day, Time time, Room room, boolean isAvailable) {
+    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) {
         return null;
     }
 
