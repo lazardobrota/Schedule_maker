@@ -47,7 +47,7 @@ public class ScheduleByDatesTest {
         println(a);
         assertEquals(2, a.size());
 
-        //Withou last and first
+        //Without last and first
         time.setEndDate(LocalDate.of(2023, 10, 25));
         a = scheduleByDates.search(time, 1, false);
         println(a);
@@ -71,10 +71,25 @@ public class ScheduleByDatesTest {
 
         scheduleByDates.addAppointment(appointment, 1);
 
+        time.setStartTime(LocalTime.of(12, 1));
         time.setEndTime(LocalTime.of(14, 0));
         List<Appointment> a = scheduleByDates.search(time, 1, false);
         println(a);
         assertEquals(0, a.size());
+    }
+
+    @Test
+    public void timeEqualsTest() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0, 40), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.addAppointment(appointment, 1);
+
+
+        assertFalse(scheduleByDates.addAppointment(appointment, 1));
     }
 
     @Test

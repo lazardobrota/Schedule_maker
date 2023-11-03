@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 //Represent set time, one instace of Time represent one row
@@ -90,24 +91,71 @@ public class Time {
         if (this == that)
             return true;
 
-        if (this.getStartTime() != null && that.getStartTime() != null) {
-            //If their START hour or minutes are different they are not the same
-            if (this.getStartTime().getHour() != that.getStartTime().getHour() || this.getStartTime().getMinute() != that.getStartTime().getMinute())
-                return false;
+        //If time doesn't exist, this is for search when someone wants range od dates
+        if (this.getStartTime() == null || that.getStartTime() == null || this.getEndTime() == null && that.getEndTime() == null) {
+            //Only look for date when time doesn't exist
+            return isBetweenDate(that);
         }
+        //Time exists
 
-        if (this.getEndTime() != null && that.getEndTime() != null) {
-            //If their END hour or minutes are different they are not the same
-            if (this.getEndTime().getHour() != that.getEndTime().getHour() || this.getEndTime().getMinute() != that.getEndTime().getMinute())
-                return false;
-        }
+        //If They intersect with date and If they intersect with time they are same, else they are not the same
+        return isBetweenDate(that) && isBetweenTime(that);
+    }
 
-        //If they are not the same date
-        if (!this.getStartDate().equals(that.getStartDate()) || !this.getEndDate().equals(that.getEndDate()))
-            return false;
+    //True - they intersect
+    private boolean isBetweenTime(Time that) {
 
-        //They are on the same day and same time, so they are the same
-        return true;
+        //If their StartTime is the same
+        if (this.getStartTime().getHour() == that.getStartTime().getHour() && this.getStartTime().getMinute() == that.getStartTime().getMinute())
+            return true;
+
+        //If their EndTime is the same
+        if (this.getEndTime().getHour() == that.getEndTime().getHour() && this.getEndTime().getMinute() == that.getEndTime().getMinute())
+            return true;
+
+        //If THIS StartTime is between THAT StartTime and EndTime
+        if (this.getStartTime().isAfter(that.getStartTime()) && this.getStartTime().isBefore(that.getEndTime()))
+            return true;
+
+        //If THIS EndTime is between THAT StartTime and EndTime
+        if (this.getEndTime().isAfter(that.getStartTime()) && this.getEndTime().isBefore(that.getEndTime()))
+            return true;
+
+        //If THAT StartTime is between THIS StartTime and EndTime
+        if (that.getStartTime().isAfter(this.getStartTime()) && that.getStartTime().isBefore(this.getEndTime()))
+            return true;
+
+        //If THAT EndTime is between THIS StartTime and EndTime
+        if (that.getEndTime().isAfter(this.getStartTime()) && that.getEndTime().isBefore(this.getEndTime()))
+            return true;
+
+        return false;
+    }
+
+    //True - they intersect
+    private boolean isBetweenDate(Time that) {
+
+        //If start dates and end dates are equal
+        if (this.getStartDate().equals(that.getStartDate()) && this.getEndDate().equals(that.getEndDate()))
+            return true;
+
+        //If THIS StartDate is between THAT StartDate and EndDate
+        if (this.getStartDate().isAfter(that.getStartDate()) && this.getStartDate().isBefore(that.getEndDate()))
+            return true;
+
+        //If THIS EndDate is between THAT StartDate and EndDate
+        if (this.getEndDate().isAfter(that.getStartDate()) && this.getEndDate().isBefore(that.getEndDate()))
+            return true;
+
+        //If THAT StartDate is between THIS StartDate and EndDate
+        if (that.getStartDate().isAfter(this.getStartDate()) && that.getStartDate().isBefore(this.getEndDate()))
+            return true;
+
+        //If THAT EndDate is between THIS StartDate and EndDate
+        if (that.getEndDate().isAfter(this.getStartDate()) && that.getEndDate().isBefore(this.getEndDate()))
+            return true;
+
+        return false;
     }
 
     @Override
