@@ -198,14 +198,7 @@ public class ScheduleByDates extends Schedule {
         int i = 0;
         for (; i < appointments.size(); i++) {
             //Make new available appointment
-            Appointment available = new Appointment(new Room(appointments.get(i).getRoom()), new Time(appointments.get(i).getTime()));
-            available.getTime().setStartTime(startTime); //set start time from last appointments end time
-            available.getTime().setEndTime(appointments.get(i).getTime().getStartTime()); //set end time from this appointments start time
-
-            available.getTime().setStartDate(startDate);
-            available.getTime().setEndDate(appointments.get(i).getTime().getStartDate());
-
-            availables.add(available);
+            availables.add(makeAvailableAppointment(appointments.get(i), startTime, appointments.get(i).getTime().getStartTime(), startDate, appointments.get(i).getTime().getStartDate()));
 
             startTime = appointments.get(i).getTime().getEndTime();//save end time for beginning of next available appointment
             startDate = appointments.get(i).getTime().getEndDate();
@@ -213,14 +206,7 @@ public class ScheduleByDates extends Schedule {
             //New Room so end this room and start from beginning
             if (i + 1 != appointments.size() && !appointments.get(i).getRoom().equals(appointments.get(i + 1).getRoom())) {
                 //End room
-                available = new Appointment(appointments.get(i).getRoom(), appointments.get(i).getTime());
-                available.getTime().setStartTime(startTime); //set start time from last appointments end time
-                available.getTime().setEndTime(LocalTime.of(23, 59)); //set last possible time
-
-                available.getTime().setStartDate(startDate); //set start date from last appointments end time
-                available.getTime().setEndDate(this.getEndDate()); //set last date on schedule
-
-                availables.add(available);
+                availables.add(makeAvailableAppointment(appointments.get(i), startTime, LocalTime.of(23, 59), startDate, this.getEndDate()));
 
                 //Start new Room
                 startDate = this.getStartDate();
@@ -231,16 +217,30 @@ public class ScheduleByDates extends Schedule {
 
         //End room
         i--;
-        Appointment available = new Appointment(new Room(appointments.get(i).getRoom()), new Time(appointments.get(i).getTime()));
-        available.getTime().setStartTime(startTime); //set start time from last appointments end time
-        available.getTime().setEndTime(LocalTime.of(23, 59)); //set last possible time
-
-        available.getTime().setStartDate(startDate); //set start date from last appointments end time
-        available.getTime().setEndDate(this.getEndDate()); //set last date on schedule
-
-        availables.add(available);
+        availables.add(makeAvailableAppointment(appointments.get(i), startTime, LocalTime.of(23, 59), startDate, this.getEndDate()));
 
         return availables;
+    }
+
+    //TODO this should be added to documentation since its private method
+    /**
+     * Takes arguments and makes new available Appointment
+     * @param appointment real Appointment
+     * @param startTime is end time of appointment before this one
+     * @param endTime is start time of current appointment
+     * @param startDate is end date of appointment before this one
+     * @param endDate is start date of current appointment
+     * @return new available Appointment between last and current appointment
+     */
+    private Appointment makeAvailableAppointment(Appointment appointment, LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate) {
+        Appointment available = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
+        available.getTime().setStartTime(startTime); //set start time from last appointments end time
+        available.getTime().setEndTime(endTime); //set last possible time
+
+        available.getTime().setStartDate(startDate); //set start date from last appointments end time
+        available.getTime().setEndDate(endDate); //set last date on schedule
+
+        return available;
     }
 
     @Override

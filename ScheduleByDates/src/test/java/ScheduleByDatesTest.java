@@ -196,7 +196,9 @@ public class ScheduleByDatesTest {
         appointment.getRoom().setRoomName("raf2");
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
-        println(scheduleByDates.convertToAvailable(scheduleByDates.getAppointments()));
+        List<Appointment> a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
+        println(a);
+        assertEquals(8, a.size());
     }
 
     @Test
