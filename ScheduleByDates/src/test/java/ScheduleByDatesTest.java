@@ -181,6 +181,25 @@ public class ScheduleByDatesTest {
     }
 
     @Test
+    public void convertToAvailableTest() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
+
+
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+        println(scheduleByDates.convertToAvailable(scheduleByDates.getAppointments()));
+
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+        println(scheduleByDates.convertToAvailable(scheduleByDates.getAppointments()));
+    }
+
+    @Test
     @Disabled
     public void sortTest() throws InvalidDateException{
         Room room = new Room("raf1");

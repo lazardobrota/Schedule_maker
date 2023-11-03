@@ -8,6 +8,7 @@ import specification.Time;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -19,9 +20,9 @@ public class ScheduleByDates extends Schedule {
 
     @Override
     public void initialization() {
-
     }
 
+    //TODO specifikacija
     @Override
     public boolean addRooms(Room room) {
         return this.getRooms().add(room); // returns true if element doesn't exist, so it's added to the list
@@ -161,16 +162,85 @@ public class ScheduleByDates extends Schedule {
         List<Appointment> appointmentList = new ArrayList<>();
         List<Time> times = makeTimes(time, day);
 
+        //If looking for Appointments
+        if (!isAvailable) {
+            for (Time t : times) {
+                for (Appointment a: getAppointments()) {
+                    //If true then we found element
+                    if (compareTime(a.getTime(), t))
+                        appointmentList.add(a);
 
+                }
+            }
+            return appointmentList;
+        }
+
+        //If looking for available appointments
+
+        List<Appointment> availables = convertToAvailable(this.getAppointments());
+        //TODO
         for (Time t : times) {
+            Time tmp = new Time(t);
+            t.setStartTime(LocalTime.of(0, 0));
             for (Appointment a: getAppointments()) {
-                //If true then we found element
-                if (compareTime(a.getTime(), t))
-                    appointmentList.add(a);
+            }
+        }
+
+        return appointmentList;
+    }
+
+    //TODO needs to be private, its public because of testing and it needs to be in specification
+    //From Appointments make list of all available appointments
+    public List<Appointment> convertToAvailable(List<Appointment> appointments) {
+        List<Appointment> availables = new ArrayList<>();
+        LocalTime startTime = LocalTime.of(0, 0);
+        LocalDate startDate = this.getStartDate();
+        int i = 0;
+        for (; i < appointments.size(); i++) {
+            //Make new available appointment
+            Appointment available = new Appointment(new Room(appointments.get(i).getRoom()), new Time(appointments.get(i).getTime()));
+            available.getTime().setStartTime(startTime); //set start time from last appointments end time
+            available.getTime().setEndTime(appointments.get(i).getTime().getStartTime()); //set end time from this appointments start time
+
+            available.getTime().setStartDate(startDate);
+            available.getTime().setEndDate(appointments.get(i).getTime().getStartDate());
+
+            availables.add(available);
+
+            startTime = appointments.get(i).getTime().getEndTime();//save end time for beginning of next available appointment
+            startDate = appointments.get(i).getTime().getEndDate();
+
+            //New Room so end this room and start from beginning
+            if (i + 1 != appointments.size() && !appointments.get(i).getRoom().equals(appointments.get(i + 1).getRoom())) {
+                //End room
+                available = new Appointment(appointments.get(i).getRoom(), appointments.get(i).getTime());
+                available.getTime().setStartTime(startTime); //set start time from last appointments end time
+                available.getTime().setEndTime(LocalTime.of(23, 59)); //set last possible time
+
+                available.getTime().setStartDate(startDate); //set start date from last appointments end time
+                available.getTime().setEndDate(this.getEndDate()); //set last date on schedule
+
+                availables.add(available);
+
+                //Start new Room
+                startDate = this.getStartDate();
+                startTime = LocalTime.of(0, 0);
 
             }
         }
-        return appointmentList;
+
+        //End room
+        i--;
+        Appointment available = new Appointment(new Room(appointments.get(i).getRoom()), new Time(appointments.get(i).getTime()));
+        available.getTime().setStartTime(startTime); //set start time from last appointments end time
+        available.getTime().setEndTime(LocalTime.of(23, 59)); //set last possible time
+
+        available.getTime().setStartDate(startDate); //set start date from last appointments end time
+        available.getTime().setEndDate(this.getEndDate()); //set last date on schedule
+
+        availables.add(available);
+
+        return availables;
     }
 
     @Override
