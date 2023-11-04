@@ -31,6 +31,31 @@ public class ScheduleByDatesTest {
     }
 
     @Test
+    public void searchDateTimeRoomTest() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+
+        Time t = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 10), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        List<Appointment> a = scheduleByDates.search(t, 1, room, false);
+        println(a);
+        assertEquals(3, a.size());
+
+        t.setStartTime(LocalTime.of(9, 0));
+        a = scheduleByDates.search(t, 1, room, true);
+        println(a);
+    }
+
+    @Test
     @Disabled
     //Needs to be fixed
     public void searchDate() throws InvalidDateException{

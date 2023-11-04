@@ -175,7 +175,46 @@ public class ScheduleByDates extends Schedule {
 
     @Override
     public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException{
-        return null;
+        List<Appointment> appointmentList = new ArrayList<>();
+        List<Time> times = makeTimes(time, day);
+        List<Appointment> check;
+
+        if (!isAvailable) //If looking for Appointments
+            check = this.getAppointments();
+        else //If looking for available appointments
+            check = convertToAvailable(this.getAppointments());
+
+        for (Time t : times) {
+            for (Appointment a: check) {
+                //If true then we found element
+                if (compareTime(a.getTime(), t) && compareRoom(a.getRoom(), room))
+                    appointmentList.add(a);
+
+            }
+        }
+        return appointmentList;
+    }
+
+    private boolean compareRoom(Room room, Room room2) {
+        //Different with overridden equals method
+        if (!room.equals(room2))
+            return false;
+
+        //Doesn't look for anything in hashMap
+        if (room2.getAdditionally() == null)
+            return true;
+
+        //Looking for additional that doesn't exist at all
+        if (room.getAdditionally() == null)
+            return false;
+
+        for (Map.Entry<String, String> set : room2.getAdditionally().entrySet()) {
+            //If our element doesn't have that key, or they are not the same, return false
+            if (!room.getAdditionally().containsKey(set.getKey()) || !room.getAdditionally().get(set.getKey()).equals(set.getValue()))
+                return false;
+        }
+
+        return true;
     }
 
     @Override
