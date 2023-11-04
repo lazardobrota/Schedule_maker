@@ -77,7 +77,41 @@ public class DaySchedule extends Schedule {
 
     @Override
     public boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException {
-        return false;
+        if (oldAppoint.getTime().getStartDate().getDayOfWeek().getValue() != day)
+            throw new InvalidDateException("Day needs to be the same as startDate for old Date");
+        if (oldAppoint.getTime().getEndDate().isBefore(oldAppoint.getTime().getStartDate()))
+            throw new InvalidDateException("startDate need to be before endDate");
+
+        if (startDate.getDayOfWeek().getValue() != day)
+            throw new InvalidDateException("Day needs to be the same as startDate");
+        if (endDate.isBefore(startDate))
+            throw new InvalidDateException("startDate need to be before endDate for new Date");
+
+        long oldDaysBetween = ChronoUnit.DAYS.between(oldAppoint.getTime().getStartDate(), oldAppoint.getTime().getEndDate()); //old, throws exception
+        long newDaysBetween = ChronoUnit.DAYS.between(startDate, endDate); //new, throws exception
+
+        //Took more old dates and less new dates, so old dates can't fit in range of new dates
+        if (oldDaysBetween > newDaysBetween)
+            throw new InvalidDateException("New range needs to be bigger");
+
+        //If newDate has bigger range, lower it to the same range as oldDate
+        endDate = endDate.minusDays(newDaysBetween - oldDaysBetween);
+
+        //If possible, remove all old appointments in that range
+        if (!removeAppointment(oldAppoint, day)) {
+            return false;
+        }
+
+        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
+        newAppoint.getTime().setStartDate(startDate);
+        newAppoint.getTime().setEndDate(endDate);
+        if (!addAppointment(newAppoint, day)) {
+            //if it can't add new dates then
+            addAppointment(oldAppoint, day);
+            return false;
+        }
+
+        return true;
     }
 
     @Override

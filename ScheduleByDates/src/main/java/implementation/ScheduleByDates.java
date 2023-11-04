@@ -139,7 +139,7 @@ public class ScheduleByDates extends Schedule {
             return false;
         }
 
-        Appointment newAppoint = new Appointment(oldAppoint.getRoom(), oldAppoint.getTime());
+        Appointment newAppoint = new Appointment(new Room(oldAppoint.getRoom()), new Time(oldAppoint.getTime()));
         newAppoint.getTime().setStartDate(startDate);
         newAppoint.getTime().setEndDate(endDate);
         if (!addAppointment(newAppoint, day)) {
