@@ -7,30 +7,42 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DayScheduleTest {
 
     @Test
-    public void addAppointmentTest() {
-//        Room room = new Room("raf1");
-//        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 10), LocalTime.now(), LocalTime.now().plusHours(2));
-//        Appointment appointment = new Appointment(room, time);
-//
-//        DaySchedule daySchedule = new DaySchedule(LocalDate.now().minusYears(1), LocalDate.now());
-//
-//        //endDate before startDate exception
-//        System.out.println(daySchedule.getAppointments());
-//        InvalidDateException ex = assertThrows(InvalidDateException.class, () -> daySchedule.addAppointment(appointment, 1, LocalDate.now(), LocalDate.now().minusWeeks(2)));
-//        System.out.println(ex.getMessage());
-//
-//        //check if everything is added correctly
-//        try {
-//            daySchedule.addAppointment(appointment, 1, LocalDate.now().minusWeeks(2), LocalDate.now());
-//        } catch (InvalidDateException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(daySchedule.getAppointments());
+    public void addAppointmentTest() throws InvalidDateException{
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 16), LocalDate.of(2023, 10, 20), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+
+        //16.10.2023 to 20.10.2023. monday
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+        assertEquals(5, daySchedule.getAppointments().size());
+
+        daySchedule.getAppointments().clear();
+
+        //Same date
+        appointment.getTime().setEndDate(appointment.getTime().getStartDate());
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+        assertEquals(1, daySchedule.getAppointments().size());
+
+        //Same date, different day
+        assertThrows(InvalidDateException.class, () -> daySchedule.addAppointment(appointment, 3));
+    }
+
+    private void println(List<Appointment> appointmentList) {
+        for (Appointment a: appointmentList) {
+            System.out.println(a);
+        }
+
+        System.out.println("\n\n\n");
     }
 }

@@ -26,6 +26,25 @@ public class DaySchedule extends Schedule {
 
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
+        if (appointment.getTime().getStartDate().getDayOfWeek().getValue() != day)
+            throw new InvalidDateException("Day needs to be the same as startDate");
+
+        if (appointment.getTime().getEndDate().isBefore(appointment.getTime().getStartDate()))
+            throw new InvalidDateException("startDate need to be before endDate");
+
+        List<Appointment> appointments = makeOneFromMultiDay(new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime())));
+
+        for (Appointment a : appointments) {
+            //Date isn't good
+            if (!isValidDate(a.getTime().getStartDate()))
+                return false;
+
+            //Already exist
+            if (this.getAppointments().contains(a))
+                return false;
+        }
+
+        this.getAppointments().addAll(appointments);
         return true;
     }
 
