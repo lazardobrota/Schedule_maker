@@ -1,10 +1,8 @@
 import org.junit.jupiter.api.Test;
 import specification.Time;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 

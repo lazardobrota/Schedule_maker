@@ -1,7 +1,6 @@
 package specification;
 
 import exceptions.InvalidDateException;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
