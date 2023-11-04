@@ -108,6 +108,14 @@ public class ScheduleByDatesTest {
         println(a);
         assertEquals(10, a.size());
 
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+
+        //Between two appointments on same date
+        appointment.getTime().setEndTime(LocalTime.of(11, 0));
+        a = scheduleByDates.search(appointment.getTime(), 1, true);
+        println(a);
+        assertEquals(10, a.size());
     }
     @Test
     public void timeEqualsTest() throws InvalidDateException{
@@ -232,6 +240,16 @@ public class ScheduleByDatesTest {
         a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
         println(a);
         assertEquals(52, a.size());
+
+        System.out.println("Something different");
+        scheduleByDates.getAppointments().clear();
+        appointment.getTime().setStartTime(LocalTime.of(0, 0));
+        appointment.getTime().setEndTime(LocalTime.of(23, 59));
+        scheduleByDates.addAppointment(appointment, 1);
+        scheduleByDates.addAppointment(appointment, 2);
+        println(scheduleByDates.getAppointments());
+        a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
+        println(a);
     }
 
     @Test

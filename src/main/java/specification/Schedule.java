@@ -176,7 +176,7 @@ public abstract class Schedule {
      * @param endDate is start date of current appointment
      * @return new available Appointment between last and current appointment
      */
-    private List<Appointment> makeAvailableAppointment(Appointment appointment, LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate) {
+    protected List<Appointment> makeAvailableAppointment(Appointment appointment, LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate) {
         Appointment available = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
         available.getTime().setStartTime(startTime); //set start time from last appointments end time
         available.getTime().setEndTime(endTime); //set last possible time
@@ -187,7 +187,7 @@ public abstract class Schedule {
         return makeOneFromMultiDay(available);
     }
 
-    private List<Appointment> makeOneFromMultiDay(Appointment appointment) {
+    protected List<Appointment> makeOneFromMultiDay(Appointment appointment) {
         List<Appointment> appointments = new ArrayList<>();
 
 
