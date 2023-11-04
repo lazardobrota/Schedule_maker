@@ -25,11 +25,6 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public boolean addRooms(Room room) {
-        return this.getRooms().add(room); // returns true if element doesnt exist so its added to the list
-    }
-
-    @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         return true;
     }
@@ -56,6 +51,21 @@ public class DaySchedule extends Schedule {
 
     @Override
     public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, boolean isAvailable) throws InvalidDateException {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         return null;
     }
 

@@ -60,10 +60,10 @@ public class Time {
     }
 
     //Just dates for range when doing search
-    public Time(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
+//    public Time(LocalDate startDate, LocalDate endDate) {
+//        this.startDate = startDate;
+//        this.endDate = endDate;
+//    }
 
     //Clone atributes constructor
     public Time(Time that) {

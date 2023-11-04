@@ -22,12 +22,6 @@ public class ScheduleByDates extends Schedule {
     public void initialization() {
     }
 
-    //TODO specifikacija
-    @Override
-    public boolean addRooms(Room room) {
-        return this.getRooms().add(room); // returns true if element doesn't exist, so it's added to the list
-    }
-
     //Add days to startDate to be on that specific date
     private LocalDate findDateWithDay(LocalDate startDate, int day) {
         day %= 7; //it has 7 days in the week
@@ -179,89 +173,6 @@ public class ScheduleByDates extends Schedule {
         return appointmentList;
     }
 
-    //TODO needs to be private, its public because of testing and it needs to be in specification
-    //From Appointments make list of all available appointments
-    public List<Appointment> convertToAvailable(List<Appointment> appointments) {
-        List<Appointment> availables = new ArrayList<>();
-        LocalTime startTime = LocalTime.of(0, 0);
-        LocalDate startDate = this.getStartDate();
-        int i = 0;
-        for (; i < appointments.size(); i++) {
-            //Make new available appointment
-            availables.addAll(makeAvailableAppointment(appointments.get(i), startTime, appointments.get(i).getTime().getStartTime(), startDate, appointments.get(i).getTime().getStartDate()));
-
-            startTime = appointments.get(i).getTime().getEndTime();//save end time for beginning of next available appointment
-            startDate = appointments.get(i).getTime().getEndDate();
-
-            //New Room so end this room and start from beginning
-            if (i + 1 != appointments.size() && !appointments.get(i).getRoom().equals(appointments.get(i + 1).getRoom())) {
-                //End room
-                availables.addAll(makeAvailableAppointment(appointments.get(i), startTime, LocalTime.of(23, 59), startDate, this.getEndDate()));
-
-                //Start new Room
-                startDate = this.getStartDate();
-                startTime = LocalTime.of(0, 0);
-
-            }
-        }
-
-        //End room
-        i--;
-        availables.addAll(makeAvailableAppointment(appointments.get(i), startTime, LocalTime.of(23, 59), startDate, this.getEndDate()));
-
-        return availables;
-    }
-
-    //TODO this should be added to documentation since its private method
-    /**
-     * Takes arguments and makes new available Appointment
-     * @param appointment real Appointment
-     * @param startTime is end time of appointment before this one
-     * @param endTime is start time of current appointment
-     * @param startDate is end date of appointment before this one
-     * @param endDate is start date of current appointment
-     * @return new available Appointment between last and current appointment
-     */
-    private List<Appointment> makeAvailableAppointment(Appointment appointment, LocalTime startTime, LocalTime endTime, LocalDate startDate, LocalDate endDate) {
-        Appointment available = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
-        available.getTime().setStartTime(startTime); //set start time from last appointments end time
-        available.getTime().setEndTime(endTime); //set last possible time
-
-        available.getTime().setStartDate(startDate); //set start date from last appointments end time
-        available.getTime().setEndDate(endDate); //set last date on schedule
-
-        return makeOneFromMultiDay(available);
-    }
-
-    private List<Appointment> makeOneFromMultiDay(Appointment appointment) {
-        List<Appointment> appointments = new ArrayList<>();
-
-
-        boolean flag = false;
-        while (!appointment.getTime().getStartDate().equals(appointment.getTime().getEndDate())) {
-            Appointment a = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
-
-            a.getTime().setStartTime(LocalTime.of(0, 0));
-            a.getTime().setEndTime(LocalTime.of(23, 59));
-            a.getTime().setEndDate(a.getTime().getStartDate());
-            //First time start from apponitments start time
-            if (!flag) {
-                a.getTime().setStartTime(appointment.getTime().getStartTime());
-                flag = true;
-            }
-            appointments.add(a);
-
-            //Go to next day
-            appointment.getTime().setStartDate(appointment.getTime().getStartDate().plusDays(1));
-        }
-
-        //If flag is true it means there were days between dates so last day start from 00:00
-        if (flag)
-            appointment.getTime().setStartTime(LocalTime.of(0, 0));
-        appointments.add(appointment);//And last day
-        return appointments;
-    }
-
     @Override
     public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException{
         return null;
@@ -269,6 +180,21 @@ public class ScheduleByDates extends Schedule {
 
     @Override
     public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, boolean isAvailable) throws InvalidDateException {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException {
+        return null;
+    }
+
+    @Override
+    public List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         return null;
     }
 
