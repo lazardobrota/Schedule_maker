@@ -99,6 +99,7 @@ public abstract class Schedule {
      */
     public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
+    //TODO Search methods need to be different
     /**
      * Searches for Appointment in table with given starting and ending dates
      * @param day search for this day

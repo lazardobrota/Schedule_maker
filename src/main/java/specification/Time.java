@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 //Represent set time, one instace of Time represent one row
@@ -94,12 +93,12 @@ public class Time {
         //If time doesn't exist, this is for search when someone wants range od dates
         if (this.getStartTime() == null || that.getStartTime() == null || this.getEndTime() == null && that.getEndTime() == null) {
             //Only look for date when time doesn't exist
-            return isBetweenDate(that);
+            return isDateEqual(that);
         }
         //Time exists
 
         //If They intersect with date and If they intersect with time they are same, else they are not the same
-        return isBetweenDate(that) && isBetweenTime(that);
+        return isDateEqual(that) && isBetweenTime(that);
     }
 
     //True - they intersect
@@ -133,12 +132,13 @@ public class Time {
     }
 
     //True - they intersect
-    private boolean isBetweenDate(Time that) {
+    private boolean isDateEqual(Time that) {
 
         //If start dates and end dates are equal
         if (this.getStartDate().equals(that.getStartDate()) && this.getEndDate().equals(that.getEndDate()))
             return true;
 
+        /*
         //If THIS StartDate is between THAT StartDate and EndDate
         if (this.getStartDate().isAfter(that.getStartDate()) && this.getStartDate().isBefore(that.getEndDate()))
             return true;
@@ -154,6 +154,7 @@ public class Time {
         //If THAT EndDate is between THIS StartDate and EndDate
         if (that.getEndDate().isAfter(this.getStartDate()) && that.getEndDate().isBefore(this.getEndDate()))
             return true;
+         */
 
         return false;
     }
