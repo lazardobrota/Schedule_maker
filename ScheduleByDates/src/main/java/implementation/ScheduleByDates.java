@@ -195,31 +195,25 @@ public class ScheduleByDates extends Schedule {
         return appointmentList;
     }
 
-    private boolean compareRoom(Room room, Room room2) {
-        //Different with overridden equals method
-        if (!room.equals(room2))
-            return false;
-
-        //Doesn't look for anything in hashMap
-        if (room2.getAdditionally() == null)
-            return true;
-
-        //Looking for additional that doesn't exist at all
-        if (room.getAdditionally() == null)
-            return false;
-
-        for (Map.Entry<String, String> set : room2.getAdditionally().entrySet()) {
-            //If our element doesn't have that key, or they are not the same, return false
-            if (!room.getAdditionally().containsKey(set.getKey()) || !room.getAdditionally().get(set.getKey()).equals(set.getValue()))
-                return false;
-        }
-
-        return true;
-    }
-
     @Override
     public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
-        return null;
+        List<Appointment> appointmentList = new ArrayList<>();
+        List<Time> times = makeTimes(time, day);
+        List<Appointment> check;
+
+        if (!isAvailable) //If looking for Appointments
+            check = this.getAppointments();
+        else //If looking for available appointments
+            check = convertToAvailable(this.getAppointments());
+
+        for (Time t : times) {
+            for (Appointment a: check) {
+                //If true then we found element
+                if (compareTime(a.getTime(), t) && compareAdditional(a.getRoom().getAdditionally(), roomAdditionally))
+                    appointmentList.add(a);
+            }
+        }
+        return appointmentList;
     }
 
     @Override
@@ -285,6 +279,15 @@ public class ScheduleByDates extends Schedule {
         return times;
     }
 
+    private boolean compareAdditional(HashMap<String, String> map, HashMap<String, String> map2) {
+        for (Map.Entry<String, String> set : map2.entrySet()) {
+            //If our element doesn't have that key, or they are not the same, return false
+            if (!map.containsKey(set.getKey()) || !map.get(set.getKey()).equals(set.getValue()))
+                return false;
+        }
+        return true;
+    }
+
     private boolean compareTime(Time time, Time time2) {
         //Different with overridden equals method
         if (!time.equals(time2))
@@ -298,12 +301,22 @@ public class ScheduleByDates extends Schedule {
         if (time.getAdditionally() == null)
             return false;
 
-        for (Map.Entry<String, String> set : time2.getAdditionally().entrySet()) {
-            //If our element doesn't have that key, or they are not the same, return false
-            if (!time.getAdditionally().containsKey(set.getKey()) || !time.getAdditionally().get(set.getKey()).equals(set.getValue()))
-                return false;
-        }
+        return compareAdditional(time.getAdditionally(), time2.getAdditionally());
+    }
 
-        return true;
+    private boolean compareRoom(Room room, Room room2) {
+        //Different with overridden equals method
+        if (!room.equals(room2))
+            return false;
+
+        //Doesn't look for anything in hashMap
+        if (room2.getAdditionally() == null)
+            return true;
+
+        //Looking for additional that doesn't exist at all
+        if (room.getAdditionally() == null)
+            return false;
+
+        return compareAdditional(room.getAdditionally(), room2.getAdditionally());
     }
 }

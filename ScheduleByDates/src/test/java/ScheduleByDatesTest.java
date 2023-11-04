@@ -8,6 +8,7 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,6 +54,44 @@ public class ScheduleByDatesTest {
         t.setStartTime(LocalTime.of(9, 0));
         a = scheduleByDates.search(t, 1, room, true);
         println(a);
+    }
+
+    @Test
+    public void searchDateTimeAdditionalTest() throws InvalidDateException{
+        HashMap<String, String> map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Jefimija");
+
+        Room room = new Room(map, "raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+
+        Time t = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 10), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        List<Appointment> a = scheduleByDates.search(t, 1, map, false);
+        println(a);
+        assertEquals(6, a.size());
+
+        t.setStartTime(LocalTime.of(9, 0));
+        a = scheduleByDates.search(t, 1, map, true);
+        println(a);
+
+
+        map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Zdravo");
+        a = scheduleByDates.search(t, 1, map, false);
+        println(a);
+        assertEquals(0, a.size());
+
     }
 
     @Test
