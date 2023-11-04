@@ -161,30 +161,21 @@ public class ScheduleByDates extends Schedule {
     public List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException{
         List<Appointment> appointmentList = new ArrayList<>();
         List<Time> times = makeTimes(time, day);
+        List<Appointment> check;
 
-        //If looking for Appointments
-        if (!isAvailable) {
-            for (Time t : times) {
-                for (Appointment a: getAppointments()) {
-                    //If true then we found element
-                    if (compareTime(a.getTime(), t))
-                        appointmentList.add(a);
+        if (!isAvailable) //If looking for Appointments
+            check = this.getAppointments();
+        else //If looking for available appointments
+            check = convertToAvailable(this.getAppointments());
 
-                }
+        for (Time t : times) {
+            for (Appointment a: check) {
+                //If true then we found element
+                if (compareTime(a.getTime(), t))
+                    appointmentList.add(a);
+
             }
-            return appointmentList;
         }
-
-        //If looking for available appointments
-
-        //TODO
-        List<Appointment> availables = convertToAvailable(this.getAppointments());
-        for (Appointment a: availables) {
-            //If true then we found element
-            if (compareTime(a.getTime(), time))
-                appointmentList.add(a);
-        }
-
         return appointmentList;
     }
 

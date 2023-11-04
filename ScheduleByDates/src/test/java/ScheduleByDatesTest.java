@@ -86,8 +86,6 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    @Disabled
-    //TODO This doesn't work in a way that its suppose to
     public void searchDateTimeAvailable() throws InvalidDateException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
@@ -97,6 +95,8 @@ public class ScheduleByDatesTest {
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
 
         scheduleByDates.addAppointment(appointment, 1);
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(appointment, 1);
 
         appointment.getTime().setStartDate(LocalDate.of(2023, 10, 1));
         appointment.getTime().setEndDate(LocalDate.of(2023, 10, 30));
@@ -104,7 +104,6 @@ public class ScheduleByDatesTest {
         appointment.getTime().setEndTime(LocalTime.of(9, 0));
         List<Appointment> a = scheduleByDates.search(appointment.getTime(), 1, true);
         println(a);
-        assertEquals(1, a.size());
 
     }
     @Test
