@@ -83,6 +83,7 @@ public class ScheduleByDatesTest {
         t.setStartTime(LocalTime.of(9, 0));
         a = scheduleByDates.search(t, 1, map, true);
         println(a);
+        assertEquals(8, a.size());
 
 
         map = new HashMap<>();
@@ -92,6 +93,42 @@ public class ScheduleByDatesTest {
         println(a);
         assertEquals(0, a.size());
 
+    }
+
+    @Test
+    public void searchDateAdditionalTest() throws InvalidDateException{
+        HashMap<String, String> map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Jefimija");
+
+        Room room = new Room(map, "raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+
+        List<Appointment> a = scheduleByDates.search(LocalDate.of(2023, 10, 16),  map, false);
+        println(a);
+        assertEquals(2, a.size());
+
+        a = scheduleByDates.search(LocalDate.of(2023, 10, 16), map, true);
+        println(a);
+        assertEquals(4, a.size());
+
+
+        map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Zdravo");
+        a = scheduleByDates.search(LocalDate.of(2023, 10, 16), map, false);
+        println(a);
+        assertEquals(0, a.size());
     }
 
     @Test
