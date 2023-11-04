@@ -243,7 +243,21 @@ public class ScheduleByDates extends Schedule {
 
     @Override
     public List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException {
-        return null;
+        List<Appointment> appointmentList = new ArrayList<>();
+
+        List<Appointment> check;
+        if (!isAvailable) //If looking for Appointments
+            check = this.getAppointments();
+        else //If looking for available appointments
+            check = convertToAvailable(this.getAppointments());
+
+        for (Appointment a: check) {
+            //If true then we found element
+            if (a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date) && compareRoom(a.getRoom(), room))
+                appointmentList.add(a);
+
+        }
+        return appointmentList;
     }
 
     @Override
