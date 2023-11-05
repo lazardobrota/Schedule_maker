@@ -22,38 +22,6 @@ public class ScheduleByDates extends Schedule {
     public void initialization() {
     }
 
-    //Add days to startDate to be on that specific date
-    private LocalDate findDateWithDay(LocalDate startDate, int day) {
-        day %= 7; //it has 7 days in the week
-
-        if (day <= 0)
-            day += 7; // 0 Sunday, -1 Saturday,...
-
-        //How many days between startDate and day we want, it only works if day is ahead then startDate
-        int test = startDate.getDayOfWeek().getValue();
-        DayOfWeek hello = startDate.getDayOfWeek();
-        int addDays = day - startDate.getDayOfWeek().getValue();
-
-        //If startDate is ahead then go backwards to the day given and add 7 day to go to the next week of that day
-        if (addDays < 0)
-            addDays += 7;
-
-        return startDate.plusDays(addDays);
-    }
-
-    private int weeksBetween(LocalDate startDate, LocalDate endDate) throws InvalidDateException{
-        int weeksBetween = (int) ChronoUnit.WEEKS.between(startDate, endDate);
-
-        //Check rules
-
-        //End date is before start date
-        if (weeksBetween < 0) {
-            throw new InvalidDateException("Invalid startDate: " + startDate + " and endDate: "+ endDate);
-        }
-
-        return weeksBetween;
-    }
-
     //adds all or none
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {

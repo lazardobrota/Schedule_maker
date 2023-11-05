@@ -4,8 +4,10 @@ import exceptions.InvalidDateException;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Getter
@@ -35,6 +37,38 @@ public abstract class Schedule {
         notWorkingDays = new ArrayList<>();
 
         initialization();
+    }
+
+    //Add days to startDate to be on that specific date
+    protected LocalDate findDateWithDay(LocalDate startDate, int day) {
+        day %= 7; //it has 7 days in the week
+
+        if (day <= 0)
+            day += 7; // 0 Sunday, -1 Saturday,...
+
+        //How many days between startDate and day we want, it only works if day is ahead then startDate
+        int test = startDate.getDayOfWeek().getValue();
+        DayOfWeek hello = startDate.getDayOfWeek();
+        int addDays = day - startDate.getDayOfWeek().getValue();
+
+        //If startDate is ahead then go backwards to the day given and add 7 day to go to the next week of that day
+        if (addDays < 0)
+            addDays += 7;
+
+        return startDate.plusDays(addDays);
+    }
+
+    protected int weeksBetween(LocalDate startDate, LocalDate endDate) throws InvalidDateException{
+        int weeksBetween = (int) ChronoUnit.WEEKS.between(startDate, endDate);
+
+        //Check rules
+
+        //End date is before start date
+        if (weeksBetween < 0) {
+            throw new InvalidDateException("Invalid startDate: " + startDate + " and endDate: "+ endDate);
+        }
+
+        return weeksBetween;
     }
 
     //TODO Da li je bolje imati exception ili boolean
@@ -189,29 +223,30 @@ public abstract class Schedule {
     protected List<Appointment> makeOneFromMultiDay(Appointment appointment) {
         List<Appointment> appointments = new ArrayList<>();
 
+        Appointment tmp = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
 
         boolean flag = false;
-        while (!appointment.getTime().getStartDate().equals(appointment.getTime().getEndDate())) {
-            Appointment a = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
+        while (!tmp.getTime().getStartDate().equals(tmp.getTime().getEndDate())) {
+            Appointment a = new Appointment(new Room(tmp.getRoom()), new Time(tmp.getTime()));
 
             a.getTime().setStartTime(LocalTime.of(0, 0));
             a.getTime().setEndTime(LocalTime.of(23, 59));
             a.getTime().setEndDate(a.getTime().getStartDate());
             //First time start from apponitments start time
             if (!flag) {
-                a.getTime().setStartTime(appointment.getTime().getStartTime());
+                a.getTime().setStartTime(tmp.getTime().getStartTime());
                 flag = true;
             }
             appointments.add(a);
 
             //Go to next day
-            appointment.getTime().setStartDate(appointment.getTime().getStartDate().plusDays(1));
+            tmp.getTime().setStartDate(tmp.getTime().getStartDate().plusDays(1));
         }
 
         //If flag is true it means there were days between dates so last day start from 00:00
         if (flag)
-            appointment.getTime().setStartTime(LocalTime.of(0, 0));
-        appointments.add(appointment);//And last day
+            tmp.getTime().setStartTime(LocalTime.of(0, 0));
+        appointments.add(tmp);//And last day
         return appointments;
     }
 }

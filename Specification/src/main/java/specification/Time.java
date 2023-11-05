@@ -21,6 +21,8 @@ public class Time {
     private LocalTime startTime;
     private LocalTime endTime;
 
+    private int day;
+
     //private int day; //Calendar.DAY_OF_WEEK returns: 1 - Sunday(Nedelja), 2 - Monday, ..., 7 - Saturday(Subota)
 
     //Constructor will accept bool which tells if true that its 10-12h time, else it tells that its 10h + 2 so then i will change it to 10-12h
@@ -72,6 +74,7 @@ public class Time {
         this.endDate = that.getEndDate();
         this.startTime = that.getStartTime();
         this.endTime = that.getEndTime();
+        this.day = that.getDay();
     }
 
     //TODO Date i vreme mora da se proveri da li se preklapa sa drugim vremenom, mozda je jedna 10.10.2023. - 12.10.2023. 10-12h raf1, a drugi 11.10.2023. 10-12h raf1
@@ -102,7 +105,7 @@ public class Time {
     }
 
     //True - they intersect
-    private boolean isBetweenTime(Time that) {
+    public boolean isBetweenTime(Time that) {
 
         //If their StartTime is the same
         if (this.getStartTime().getHour() == that.getStartTime().getHour() && this.getStartTime().getMinute() == that.getStartTime().getMinute())
@@ -132,7 +135,7 @@ public class Time {
     }
 
     //True - they intersect
-    private boolean isDateEqual(Time that) {
+    public boolean isDateEqual(Time that) {
 
         //If start dates and end dates are equal
         if (this.getStartDate().equals(that.getStartDate()) && this.getEndDate().equals(that.getEndDate()))
@@ -172,6 +175,7 @@ public class Time {
                 ", endDate=" + endDate +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", day=" + day +
                 '}';
     }
 }
