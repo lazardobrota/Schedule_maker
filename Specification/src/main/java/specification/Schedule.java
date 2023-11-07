@@ -18,6 +18,8 @@ public abstract class Schedule {
     private LocalDate startDate;
     private LocalDate endDate;
 
+    //TODO ADD startTime and EndTime
+
     private HashSet<Room> rooms;//hashSet so there is only one of every class
 
     //internally it will be pq, so it sorts in O(nlogn)
@@ -56,6 +58,67 @@ public abstract class Schedule {
             addDays += 7;
 
         return startDate.plusDays(addDays);
+    }
+
+    //Takes range of time and makes more one day times
+    protected List<Time> makeTimes(Time time, int day) throws InvalidDateException{
+        List<Time> times = new ArrayList<>();
+
+        LocalDate date = findDateWithDay(time.getStartDate(), day);
+        int weeks = weeksBetween(date, time.getEndDate()); //throws exception
+
+        for (int i = 0; i <= weeks; i++) {
+            Time t = new Time(time);
+            t.setStartDate(date);
+            t.setEndDate(date);
+
+            times.add(t);
+
+            date = date.plusDays(7);
+        }
+
+        return times;
+    }
+
+    protected boolean compareAdditional(HashMap<String, String> map, HashMap<String, String> map2) {
+        for (Map.Entry<String, String> set : map2.entrySet()) {
+            //If our element doesn't have that key, or they are not the same, return false
+            if (!map.containsKey(set.getKey()) || !map.get(set.getKey()).equals(set.getValue()))
+                return false;
+        }
+        return true;
+    }
+
+    protected boolean compareTime(Time time, Time time2) {
+        //Different with overridden equals method
+        if (!time.equals(time2))
+            return false;
+
+        //Doesn't look for anything in hashMap
+        if (time2.getAdditionally() == null)
+            return true;
+
+        //Looking for additional that doesn't exist at all
+        if (time.getAdditionally() == null)
+            return false;
+
+        return compareAdditional(time.getAdditionally(), time2.getAdditionally());
+    }
+
+    protected boolean compareRoom(Room room, Room room2) {
+        //Different with overridden equals method
+        if (!room.equals(room2))
+            return false;
+
+        //Doesn't look for anything in hashMap
+        if (room2.getAdditionally() == null)
+            return true;
+
+        //Looking for additional that doesn't exist at all
+        if (room.getAdditionally() == null)
+            return false;
+
+        return compareAdditional(room.getAdditionally(), room2.getAdditionally());
     }
 
     protected int weeksBetween(LocalDate startDate, LocalDate endDate) throws InvalidDateException{
@@ -167,6 +230,7 @@ public abstract class Schedule {
      */
 
     //TODO needs to be private, its public because of testing and it needs to be in specification
+    //TODO Na osnovu prosledjenog appointmenta, nalazi u listi appointments sve to tome odgovara i sacuva, zatim nad tim radi convertToAvailable!!!!!
     //From Appointments make list of all available appointments
     public List<Appointment> convertToAvailable(List<Appointment> appointments) {
         List<Appointment> availables = new ArrayList<>();
@@ -216,6 +280,7 @@ public abstract class Schedule {
 
         available.getTime().setStartDate(startDate); //set start date from last appointments end time
         available.getTime().setEndDate(endDate); //set last date on schedule
+        available.getTime().setDay(appointment.getTime().getStartDate().getDayOfWeek().getValue()); //sets day
 
         return makeOneFromMultiDay(available);
     }
@@ -227,10 +292,11 @@ public abstract class Schedule {
 
         boolean flag = false;
         while (!tmp.getTime().getStartDate().equals(tmp.getTime().getEndDate())) {
+            tmp.getTime().setDay(tmp.getTime().getStartDate().getDayOfWeek().getValue());
             Appointment a = new Appointment(new Room(tmp.getRoom()), new Time(tmp.getTime()));
 
-            a.getTime().setStartTime(LocalTime.of(0, 0));
-            a.getTime().setEndTime(LocalTime.of(23, 59));
+            a.getTime().setStartTime(LocalTime.of(0, 0));//todo should use starttime
+            a.getTime().setEndTime(LocalTime.of(23, 59));//todo should use endtime
             a.getTime().setEndDate(a.getTime().getStartDate());
             //First time start from apponitments start time
             if (!flag) {
@@ -243,6 +309,7 @@ public abstract class Schedule {
             tmp.getTime().setStartDate(tmp.getTime().getStartDate().plusDays(1));
         }
 
+        tmp.getTime().setDay(tmp.getTime().getStartDate().getDayOfWeek().getValue());
         //If flag is true it means there were days between dates so last day start from 00:00
         if (flag)
             tmp.getTime().setStartTime(LocalTime.of(0, 0));

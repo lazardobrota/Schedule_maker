@@ -207,9 +207,27 @@ public class DaySchedule extends Schedule {
         return false;
     }
 
+    //TODO
     @Override
     public List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException{
-        return null;
+        List<Appointment> appointmentList = new ArrayList<>();
+        List<Time> times = makeTimes(time, day);
+        List<Appointment> check;
+
+        if (!isAvailable) //If looking for Appointments
+            check = new ArrayList<>(this.getAppointments());
+        else //If looking for available appointments
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
+
+        for (Time t : times) {
+            for (Appointment a: check) {
+                //If true then we found element
+                if (compareTime(a.getTime(), t))
+                    appointmentList.add(a);
+
+            }
+        }
+        return appointmentList;
     }
 
     @Override
