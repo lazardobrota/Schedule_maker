@@ -1,12 +1,20 @@
 package specification;
 
 import exceptions.InvalidDateException;
+import importexport.ConfigMapping;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 
+import java.io.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -21,9 +29,6 @@ public abstract class Schedule {
     //TODO ADD startTime and EndTime
 
     private HashSet<Room> rooms;//hashSet so there is only one of every class
-
-    //internally it will be pq, so it sorts in O(nlogn)
-    //private PriorityQueue<Appointment> appointments; //every index represents one row
 
     private List<Appointment> appointments; //every index represents one row
     private List<LocalDate> exclusiveDays; // Working Sundays
@@ -127,11 +132,189 @@ public abstract class Schedule {
         //Check rules
 
         //End date is before start date
-        if (weeksBetween < 0) {
+        if (weeksBetween < 0 || endDate.isBefore(startDate)) {
             throw new InvalidDateException("Invalid startDate: " + startDate + " and endDate: "+ endDate);
         }
 
         return weeksBetween;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean importJson() {
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean importCSV(String filePath, String configPath) throws IOException, InvalidDateException {
+        loadCSV(filePath, configPath);
+        return true;
+    }
+
+
+    private void loadCSV(String filePath, String configPath) throws IOException, InvalidDateException {
+        List<ConfigMapping> columnMappings = readConfig(configPath); //makes config in to list, every element is one row
+        Map<Integer, String> mappings = new HashMap<>(); //sorted map with indexes
+        for(ConfigMapping configMapping : columnMappings) {
+            mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
+        }
+
+        FileReader fileReader = new FileReader(filePath);
+        CSVParser parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(fileReader);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+
+        //Goes throw csv file
+        for (CSVRecord record : parser) {
+            Appointment appointment = new Appointment(new Room(), new Time()); //new appointment for that row
+
+            //Goes throw all index
+            for (ConfigMapping entry : columnMappings) {
+                int columnIndex = entry.getIndex();
+
+                if(columnIndex == -1) continue;
+
+                String columnName = entry.getCustom(); //save custom name for additional if needed
+                switch (mappings.get(columnIndex)) {
+                    case "roomName": //Room name
+                        appointment.getRoom().setRoomName(record.get(columnIndex));
+                        break;
+                    case "roomAdditional": //hashmap of room
+                        appointment.getRoom().getAdditionally().put(columnName, record.get(columnIndex));
+                        break;
+                    case "start": //sets startDate and startTime
+                        LocalDateTime startDateTime = LocalDateTime.parse(record.get(columnIndex), formatter);
+                        appointment.getTime().setStartDate(LocalDate.of(startDateTime.getYear(), startDateTime.getMonth(), startDateTime.getDayOfMonth()));
+                        appointment.getTime().setStartTime(LocalTime.of(startDateTime.getHour(), startDateTime.getMinute()));
+                        break;
+                    case "end": //sets endDate and endTime
+                        LocalDateTime endDateTime = LocalDateTime.parse(record.get(columnIndex), formatter);
+                        appointment.getTime().setEndDate(LocalDate.of(endDateTime.getYear(), endDateTime.getMonth(), endDateTime.getDayOfMonth()));
+                        appointment.getTime().setEndTime(LocalTime.of(endDateTime.getHour(), endDateTime.getMinute()));
+                        break;
+                    case "day": //set day
+                        appointment.getTime().setDay(Integer.parseInt(record.get(columnIndex)));
+                        break;
+                    case "timeAdditional": //hashmap of time
+                        appointment.getTime().getAdditionally().put(columnName, record.get(columnIndex));
+                        break;
+                }
+            }
+
+            this.addAppointment(appointment, appointment.getTime().getDay());
+        }
+    }
+
+    private static List<ConfigMapping>  readConfig(String filePath) throws FileNotFoundException {
+        List<ConfigMapping> mappings = new ArrayList<>();
+
+        File file = new File(filePath); //takes file
+        Scanner scanner = new Scanner(file); //reads file
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            String[] splitLine = line.split(" ", 3); //split three-way
+
+            mappings.add(new ConfigMapping(Integer.parseInt(splitLine[0]), splitLine[1], splitLine[2]));
+        }
+
+        scanner.close();
+
+
+        return mappings;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean exportJson() {
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean exportCSV(String path, String configPath) throws IOException{
+        writeData(path, configPath);
+        return true;
+    }
+
+
+    private void writeData(String path,  String configPath) throws IOException{
+        // Create a FileWriter and CSVPrinter
+        FileWriter fileWriter = new FileWriter(path);
+        CSVPrinter csvPrinter = new CSVPrinter(fileWriter, CSVFormat.DEFAULT);
+
+        List<ConfigMapping> columnMappings = readConfig(configPath); //sets index, custom and original
+        Map<Integer, String> mappings = new HashMap<>(); //sortirana mapa sa indeksima
+        for(ConfigMapping configMapping : columnMappings) {
+            mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+
+        //It needs to set it same index range as import
+
+        List<List<String>> appointmentList = new ArrayList<>();
+        //Goes throw appointments
+        for (Appointment appoint : this.getAppointments()) {
+            List<String> save = new ArrayList<>();
+            //Goes throw all index
+            for (ConfigMapping entry : columnMappings) {
+                int columnIndex = entry.getIndex();
+
+                if(columnIndex == -1) continue;
+
+                String columnName = entry.getCustom(); //save custom name for additional if needed
+                switch (mappings.get(columnIndex)) {
+                    case "roomName": //Room name
+                        save.add(appoint.getRoom().getRoomName());
+                        break;
+                    case "roomAdditional": //hashmap of room
+                        save.add(appoint.getRoom().getAdditionally().get(columnName));
+                        break;
+                    case "start": //add startDate and startTime
+                        LocalDateTime startDateTime = LocalDateTime.of(appoint.getTime().getStartDate(), appoint.getTime().getStartTime());
+                        save.add(startDateTime.format(formatter));
+                        break;
+                    case "end": //add endDate and endTime
+                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getStartTime());
+                        save.add(endDateTime.format(formatter));
+                        break;
+                    case "day": //add day
+                        save.add(String.valueOf(appoint.getTime().getDay()));
+                        break;
+                    case "timeAdditional": //hashmap of time
+                        save.add(appoint.getTime().getAdditionally().get(columnName));
+                        break;
+                }
+            }
+
+            appointmentList.add(save);
+        }
+
+        //Print every row in list
+        for (List<String> save : appointmentList) {
+            csvPrinter.printRecord(save);
+        }
+
+        csvPrinter.close();
+        fileWriter.close();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean exportPDF() {
+        return true;
     }
 
     //TODO Da li je bolje imati exception ili boolean
@@ -164,7 +347,7 @@ public abstract class Schedule {
      */
     public abstract void initialization();
 
-    /**
+    /** TODO Sortiraj sobe odmah da bi moglo posle da se proverva kada prodje sobu
      * Adds new room to HashSet of all rooms
      * @param room
      * @return boolean that returns TRUE if room has been added
@@ -216,18 +399,6 @@ public abstract class Schedule {
     public abstract List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException;
 
     public abstract List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
-
-    /* For PriorityQueue
-    public List<Appointment> getAppointmentsToList() {
-        List<Appointment> appointmentList = new ArrayList<>();
-
-        while (!appointments.isEmpty()) {
-            appointmentList.add(appointments.poll());
-        }
-
-        return appointmentList;
-    }
-     */
 
     //TODO needs to be private, its public because of testing and it needs to be in specification
     //TODO Na osnovu prosledjenog appointmenta, nalazi u listi appointments sve to tome odgovara i sacuva, zatim nad tim radi convertToAvailable!!!!!

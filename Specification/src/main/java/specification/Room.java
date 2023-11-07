@@ -29,7 +29,6 @@ public class Room {
         this.roomName = that.getRoomName();
     }
 
-    //TODO Da li treba i po HashMapi da poredi
     @Override
     public boolean equals(Object obj) {
 
@@ -47,6 +46,9 @@ public class Room {
 
         //If their name is the same
         return this.getRoomName().equals(that.getRoomName());
+    }
+
+    public Room() {
     }
 
     @Override

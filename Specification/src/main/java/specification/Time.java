@@ -61,11 +61,8 @@ public class Time {
         this.endTime = startTime.plusMinutes(minutesToAdd); // adds minuts to date to be "from to"
     }
 
-    //Just dates for range when doing search
-//    public Time(LocalDate startDate, LocalDate endDate) {
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//    }
+    public Time() {
+    }
 
     //Clone atributes constructor
     public Time(Time that) {
