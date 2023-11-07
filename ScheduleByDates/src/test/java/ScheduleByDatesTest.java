@@ -71,19 +71,27 @@ public class ScheduleByDatesTest {
 
         scheduleByDates.addAppointment(appointment, 1);
 
+        System.out.println("Add new room");
         appointment.getRoom().setRoomName("raf2");
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
 
+        System.out.println("Search in range appointments");
         Time t = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 10), LocalTime.of(10, 0), LocalTime.of(12, 0));
         List<Appointment> a = scheduleByDates.search(t, 1, map, false);
         println(a);
         assertEquals(6, a.size());
 
+        System.out.println("Search at 9:00h with additional available");
         t.setStartTime(LocalTime.of(9, 0));
         a = scheduleByDates.search(t, 1, map, true);
         println(a);
         assertEquals(8, a.size());
+
+        //Regular search
+        System.out.println("Regular search");
+        a = scheduleByDates.search(LocalDate.of(2023, 10, 16), true);
+        println(a);
 
 
         map = new HashMap<>();
@@ -106,7 +114,7 @@ public class ScheduleByDatesTest {
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
-        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 10, 1), LocalDate.of(2024, 1, 1));
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -114,10 +122,20 @@ public class ScheduleByDatesTest {
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
 
+        //Search available
+        System.out.println("Search available");
         List<Appointment> a = scheduleByDates.search(LocalDate.of(2023, 10, 16),  map, false);
         println(a);
         assertEquals(2, a.size());
 
+        //Search available in range
+        System.out.println("Search available in range");
+        Time tmp = new Time(LocalDate.of(2023, 10, 5), LocalDate.of(2023, 10, 20), LocalTime.of(6, 0), LocalTime.of(17, 0));
+        a = scheduleByDates.search(tmp, 1,  map, true);
+        println(a);
+
+        //Specific date
+        System.out.println("Specific date");
         a = scheduleByDates.search(LocalDate.of(2023, 10, 16), map, true);
         println(a);
         assertEquals(4, a.size());
@@ -160,7 +178,6 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    @Disabled
     //Needs to be fixed
     public void searchDate() throws InvalidDateException{
         Room room = new Room("raf1");
@@ -171,20 +188,24 @@ public class ScheduleByDatesTest {
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
 
         scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
 
         //Without first one
+        System.out.println("Without first one");
         time.setStartDate(LocalDate.of(2023, 10, 18));
         List<Appointment> a = scheduleByDates.search(time, 1, false);
         println(a);
         assertEquals(2, a.size());
 
         //Without last and first
+        System.out.println("Without last and first");
         time.setEndDate(LocalDate.of(2023, 10, 25));
         a = scheduleByDates.search(time, 1, false);
         println(a);
         assertEquals(1, a.size());
 
         //None selected
+        System.out.println("None selected");
         setDateAppoint(appointment, LocalDate.of(2023, 9, 1), LocalDate.of(2023, 9, 30));
         a = scheduleByDates.search(time, 1, false);
         println(a);
@@ -203,7 +224,9 @@ public class ScheduleByDatesTest {
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
 
-        List<Appointment> a = scheduleByDates.search(LocalDate.of(2023, 10, 17),  true);
+        //Specific date
+        System.out.println("Specific date");
+        List<Appointment> a = scheduleByDates.search(LocalDate.of(2023, 10, 16),  true);
         println(a);
     }
 

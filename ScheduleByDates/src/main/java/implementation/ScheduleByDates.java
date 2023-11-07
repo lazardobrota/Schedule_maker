@@ -39,6 +39,7 @@ public class ScheduleByDates extends Schedule {
             Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
             appoint.getTime().setStartDate(date); //sets its date
             appoint.getTime().setEndDate(date); //sets its date
+            appoint.getTime().setDay(day);
 
             //Already has one of the days as appointment, so it fails, or because date isn't valid in some way
             if (!isValidDate(date))
@@ -126,18 +127,29 @@ public class ScheduleByDates extends Schedule {
         List<Appointment> check;
 
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Time t : times) {
             for (Appointment a: check) {
                 //If true then we found element
-                if (compareTime(a.getTime(), t))
-                    appointmentList.add(a);
+                if (!compareTime(a.getTime(), t))
+                    continue;
 
+                //Looking for appointments
+                if (!isAvailable) {
+                    appointmentList.add(a);
+                    continue;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+                tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                appointmentList.add(tmp);
             }
         }
+
         return appointmentList;
     }
 
@@ -148,16 +160,26 @@ public class ScheduleByDates extends Schedule {
         List<Appointment> check;
 
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Time t : times) {
             for (Appointment a: check) {
                 //If true then we found element
-                if (compareTime(a.getTime(), t) && compareRoom(a.getRoom(), room))
-                    appointmentList.add(a);
+                if (!(compareTime(a.getTime(), t) && compareRoom(a.getRoom(), room)))
+                    continue;
 
+                //Looking for appointments
+                if (!isAvailable) {
+                    appointmentList.add(a);
+                    continue;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+                tmp.getRoom().setAdditionally(room.getAdditionally()); //Sets hashmap to empty when looking for available in range
+                appointmentList.add(tmp);
             }
         }
         return appointmentList;
@@ -170,15 +192,26 @@ public class ScheduleByDates extends Schedule {
         List<Appointment> check;
 
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Time t : times) {
             for (Appointment a: check) {
                 //If true then we found element
-                if (compareTime(a.getTime(), t) && compareAdditional(a.getRoom().getAdditionally(), roomAdditionally))
+                if (!(compareTime(a.getTime(), t) && compareAdditional(a.getRoom().getAdditionally(), roomAdditionally)))
+                    continue;
+
+                //Looking for appointments
+                if (!isAvailable) {
                     appointmentList.add(a);
+                    continue;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+                tmp.getRoom().setAdditionally(roomAdditionally); //Sets hashmap to what it's looking for available in range
+                appointmentList.add(tmp);
             }
         }
         return appointmentList;
@@ -190,15 +223,25 @@ public class ScheduleByDates extends Schedule {
 
         List<Appointment> check;
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Appointment a: check) {
             //If true then we found element
-            if (a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date))
-                appointmentList.add(a);
+            if (!(a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date)))
+                continue;
 
+            //Looking for appointments
+            if (!isAvailable) {
+                appointmentList.add(a);
+                continue;
+            }
+
+            //Looking for AVAILABLE appointments
+            Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+            tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+            appointmentList.add(tmp);
         }
         return appointmentList;
     }
@@ -209,96 +252,56 @@ public class ScheduleByDates extends Schedule {
 
         List<Appointment> check;
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Appointment a: check) {
             //If true then we found element
-            if (a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date) && compareRoom(a.getRoom(), room))
-                appointmentList.add(a);
+            if (!(a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date) && compareRoom(a.getRoom(), room)))
+                continue;
 
+            //Looking for appointments
+            if (!isAvailable) {
+                appointmentList.add(a);
+                continue;
+            }
+
+            //Looking for AVAILABLE appointments
+            Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+            tmp.getRoom().setAdditionally(room.getAdditionally()); //Sets hashmap to what it's looking for available in range
+            appointmentList.add(tmp);
         }
         return appointmentList;
     }
 
+    //TODO Pronadji na osnovu svega sem datuma sta zeli i onda od toga uradi covertToAvailable
     @Override
     public List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
 
         List<Appointment> check;
         if (!isAvailable) //If looking for Appointments
-            check = this.getAppointments();
+            check = new ArrayList<>(this.getAppointments());
         else //If looking for available appointments
-            check = convertToAvailable(this.getAppointments());
+            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
 
         for (Appointment a: check) {
             //If true then we found element
-            if (a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date) &&  compareAdditional(a.getRoom().getAdditionally(), roomAdditionally))
-                appointmentList.add(a);
+            if (!(a.getTime().getStartDate().equals(date) && a.getTime().getEndDate().equals(date) &&  compareAdditional(a.getRoom().getAdditionally(), roomAdditionally)))
+                continue;
 
+            //Looking for appointments
+            if (!isAvailable) {
+                appointmentList.add(a);
+                continue;
+            }
+
+            //Looking for AVAILABLE appointments
+            Appointment tmp = new Appointment(new Room(a.getRoom()), new Time(a.getTime()));
+            tmp.getRoom().setAdditionally(roomAdditionally); //Sets hashmap to what it's looking for available in range
+            appointmentList.add(tmp);
         }
         return appointmentList;
-    }
-
-    //Takes range of time and makes more one day times
-    private List<Time> makeTimes(Time time, int day) throws InvalidDateException{
-        List<Time> times = new ArrayList<>();
-
-        LocalDate date = findDateWithDay(time.getStartDate(), day);
-        int weeks = weeksBetween(date, time.getEndDate()); //throws exception
-
-        for (int i = 0; i <= weeks; i++) {
-            Time t = new Time(time);
-            t.setStartDate(date);
-            t.setEndDate(date);
-
-            times.add(t);
-
-            date = date.plusDays(7);
-        }
-
-        return times;
-    }
-
-    private boolean compareAdditional(HashMap<String, String> map, HashMap<String, String> map2) {
-        for (Map.Entry<String, String> set : map2.entrySet()) {
-            //If our element doesn't have that key, or they are not the same, return false
-            if (!map.containsKey(set.getKey()) || !map.get(set.getKey()).equals(set.getValue()))
-                return false;
-        }
-        return true;
-    }
-
-    private boolean compareTime(Time time, Time time2) {
-        //Different with overridden equals method
-        if (!time.equals(time2))
-            return false;
-
-        //Doesn't look for anything in hashMap
-        if (time2.getAdditionally() == null)
-            return true;
-
-        //Looking for additional that doesn't exist at all
-        if (time.getAdditionally() == null)
-            return false;
-
-        return compareAdditional(time.getAdditionally(), time2.getAdditionally());
-    }
-
-    private boolean compareRoom(Room room, Room room2) {
-        //Different with overridden equals method
-        if (!room.equals(room2))
-            return false;
-
-        //Doesn't look for anything in hashMap
-        if (room2.getAdditionally() == null)
-            return true;
-
-        //Looking for additional that doesn't exist at all
-        if (room.getAdditionally() == null)
-            return false;
-
-        return compareAdditional(room.getAdditionally(), room2.getAdditionally());
     }
 }
