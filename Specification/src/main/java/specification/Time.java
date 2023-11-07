@@ -11,7 +11,7 @@ import java.util.HashMap;
 @Getter
 @Setter
 public class Time {
-    private HashMap<String, String> additionally;//additional columns
+    private HashMap<String, String> additionally = new HashMap<>();//additional columns
 
     //private LocalDate date; // only one date since class Time represent one row
 
