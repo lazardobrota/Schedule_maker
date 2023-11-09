@@ -27,7 +27,7 @@ public class ImportExportTest {
                "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
         println(scheduleByDates.getAppointments());
 
-        scheduleByDates.exportCSV("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\output.txt",
+        scheduleByDates.exportCSV("output.txt",
                 "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
     }
 
@@ -89,9 +89,22 @@ public class ImportExportTest {
 
         println(scheduleByDates.getAppointments());
 
-        scheduleByDates.exportJson("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\outputjson.txt",
+        scheduleByDates.exportJson("outputjson2.txt");
+
+    }
+
+    @Test
+    public void exportPDF() throws IOException, InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.now(), LocalTime.now().plusHours(2));
+        Appointment appointment = new Appointment(room, time);
+
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
+
+        scheduleByDates.importJson("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\termini.json",
                 "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
 
+        scheduleByDates.exportPDF("outputPDF.pdf", "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
     }
 
     private void println(List<Appointment> appointmentList) {

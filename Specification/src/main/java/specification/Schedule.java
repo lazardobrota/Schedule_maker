@@ -14,6 +14,12 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import specification.serializer.MyAppointmentSerializer;
 import specification.serializer.MyRoomSerializer;
 import specification.serializer.MyTimeSerializer;
 
@@ -163,20 +169,18 @@ public abstract class Schedule {
 
     /**
      * Makes file with given path that will have exported data in json format
-     * @param filePath Path to file that will be exported to
-     * @param configPath Path to config
+     * @param path Path to file that will be exported to
      * @return boolean, true if export went well
      * @throws IOException Something went wrong with export to file
      */
-    public boolean exportJson(String filePath, String configPath) throws IOException {
+    public boolean exportJson(String path) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.registerModule(new JavaTimeModule());
 
         SimpleModule module = new SimpleModule();
-        module.addSerializer(Time.class, new MyTimeSerializer());
-        module.addSerializer(Room.class, new MyRoomSerializer());
+        module.addSerializer(Appointment.class, new MyAppointmentSerializer());
         objectMapper.registerModule(module);
-        objectMapper.writeValue(Paths.get(filePath).toFile(), this.getAppointments());
+        objectMapper.writeValue(new File(path), this.getAppointments());
         return true;
     }
 
@@ -402,7 +406,84 @@ public abstract class Schedule {
      *
      * @return
      */
-    public boolean exportPDF() {
+    public boolean exportPDF(String path, String configPath) throws IOException {
+        List<ConfigMapping> columnMappings = readConfig(configPath); //sets index, custom and original
+        Map<Integer, String> mappings = new HashMap<>(); //sortirana mapa sa indeksima
+        for(ConfigMapping configMapping : columnMappings) {
+            mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+
+        PDDocument document = new PDDocument(); //new document
+        PDPage page = new PDPage();
+        document.addPage(page);
+
+        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+        //Text
+        contentStream.beginText();
+
+        //For title
+        contentStream.setFont(PDType1Font.TIMES_BOLD, 20);
+        contentStream.newLineAtOffset(25, 700);
+        contentStream.showText("Available and taken appointments");
+
+        //Normaln text
+        contentStream.setFont(PDType1Font.TIMES_ROMAN, 14);
+        contentStream.newLineAtOffset(0, -20);
+
+        StringBuilder headers = new StringBuilder();
+        for (ConfigMapping configMapping : columnMappings) {
+            headers.append(configMapping.getCustom() + ", ");
+        }
+        headers = new StringBuilder(headers.toString().substring(0 , headers.length() - 2)); // remove last ", "
+        contentStream.showText(headers.toString());
+        contentStream.newLineAtOffset(0, -15);
+
+        for (Appointment appoint : this.getAppointments()) {
+            StringBuilder save = new StringBuilder();
+            for (ConfigMapping configMapping : columnMappings) {
+                int columnIndex = configMapping.getIndex();
+
+                if(columnIndex == -1) continue;
+
+                String columnName = configMapping.getCustom(); //save custom name for additional if needed
+                switch (mappings.get(columnIndex)) {
+                    case "roomName": //Room name
+                        headers.append(appoint.getRoom().getRoomName()).append(", ");
+                        break;
+                    case "roomAdditional": //hashmap of room
+                        save.append(appoint.getRoom().getAdditionally().get(columnName)).append(", ");
+                        break;
+                    case "start": //add startDate and startTime
+                        LocalDateTime startDateTime = LocalDateTime.of(appoint.getTime().getStartDate(), appoint.getTime().getStartTime());
+                        save.append(startDateTime.format(formatter)).append(", ");
+                        break;
+                    case "end": //add endDate and endTime
+                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getStartTime());
+                        save.append(endDateTime.format(formatter)).append(", ");
+                        break;
+                    case "day": //add day
+                        save.append(String.valueOf(appoint.getTime().getDay())).append(", ");
+                        break;
+                    case "timeAdditional": //hashmap of time
+                        save.append(appoint.getTime().getAdditionally().get(columnName)).append(", ");
+                        break;
+                }
+            }
+
+            contentStream.showText(save.toString().substring(0, save.length() - 2));
+            contentStream.newLineAtOffset(0, -15);
+        }
+
+
+
+        contentStream.endText();
+        contentStream.close();
+
+        document.save(path);
+        document.close();
         return true;
     }
 
