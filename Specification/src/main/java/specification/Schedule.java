@@ -149,8 +149,12 @@ public abstract class Schedule {
     }
 
     /**
-     *
-     * @return
+     * Takes json file and its config and maps everything accordingly to class Objects Room and Time
+     * @param filePath Path to file that will be imported
+     * @param configPath Path to config
+     * @return boolean, true if file has been imported
+     * @throws IOException Something went wrong with import of file
+     * @throws InvalidDateException Some dates in file are invalid
      */
     public boolean importJson(String filePath, String configPath)  throws IOException, InvalidDateException{
         loadJson(filePath, configPath);
@@ -158,8 +162,11 @@ public abstract class Schedule {
     }
 
     /**
-     *
-     * @return
+     * Makes file with given path that will have exported data in json format
+     * @param filePath Path to file that will be exported to
+     * @param configPath Path to config
+     * @return boolean, true if export went well
+     * @throws IOException Something went wrong with export to file
      */
     public boolean exportJson(String filePath, String configPath) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -231,8 +238,12 @@ public abstract class Schedule {
     }
 
     /**
-     *
-     * @return
+     * Takes csv file and its config and maps everything accordingly to class Objects Room and Time
+     * @param filePath Path to file that will be imported
+     * @param configPath Path to config
+     * @return boolean, true if file has been imported
+     * @throws IOException Something went wrong with import of file
+     * @throws InvalidDateException Some dates in file are invalid
      */
     public boolean importCSV(String filePath, String configPath) throws IOException, InvalidDateException {
         loadCSV(filePath, configPath);
@@ -313,8 +324,11 @@ public abstract class Schedule {
     }
 
     /**
-     *
-     * @return
+     * Makes file with given path that will have exported data in csv format
+     * @param path Path to file that will be exported to
+     * @param configPath Path to config
+     * @return boolean, true if export went well
+     * @throws IOException Something went wrong with export to file
      */
     public boolean exportCSV(String path, String configPath) throws IOException{
         writeData(path, configPath);
@@ -422,7 +436,7 @@ public abstract class Schedule {
      */
     public abstract void initialization();
 
-    /** TODO Sortiraj sobe odmah da bi moglo posle da se proverva kada prodje sobu
+    /**
      * Adds new room to HashSet of all rooms
      * @param room
      * @return boolean that returns TRUE if room has been added
@@ -433,17 +447,20 @@ public abstract class Schedule {
 
     /**
      * Add appointment to List if there isn't already that appointment in there
-     * @param appointment
-     * @param day
-     * @return boolean that returns TRUE if appointment has been added
+     * @param appointment Has room and time information about appointment that needs to be added
+     * @param day On what day should this be
+     * @return Boolean that returns TRUE if appointment has been added
+     * @throws InvalidDateException If date isn't valid
      */
     public abstract boolean addAppointment(Appointment appointment, int day) throws InvalidDateException;
 
+
     /**
      * Removes appointment from list if it exists
-     * @param appointment
-     * @param day
-     * @return boolean that returns TRUE if appointment has been removed
+     * @param appointment Has room and time information about appointment that needs to be removed
+     * @param day On what day should this be
+     * @return Boolean that returns TRUE if appointment has been removed
+     * @throws InvalidDateException If date isn't valid
      */
     public abstract boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException;
 
@@ -453,26 +470,76 @@ public abstract class Schedule {
      * @param oldAppoint needs to be removed
      * @return boolean return true if it can remove old one and add new one
      */
+    /**
+     *
+     * @param oldAppoint Has room and time information about appointment that needs to be changed
+     * @param day On what day should this be
+     * @param startDate New start date for old Appointment
+     * @param endDate  Old start date for old Appointment
+     * @return Boolean return true if it can remove old one and add new one
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract boolean changeAppointment(Appointment oldAppoint, int day, LocalDate startDate, LocalDate endDate) throws InvalidDateException;
 
-    //TODO Search methods need to be different
     /**
-     * Searches for Appointment in table with given starting and ending dates
+     * Searches for Appointment in table with given information
+     * @param time Range od dates, times and additional information
      * @param day search for this day
-     * @param time
-     * @param isAvailable does user want available appointments or list of all appointments
+     * @param isAvailable Does user want available appointments or list of all appointments
      * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
      */
     public abstract List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException;
 
+    /**
+     * Searches for Appointment in table with given information
+     * @param time Range od dates, times and additional information
+     * @param day Search for this day
+     * @param room Information about room that needs to be found
+     * @param isAvailable Does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException;
 
+    /**
+     * Searches for Appointment in table with given information
+     * @param time Range od dates, times and additional information
+     * @param day Search for this day
+     * @param roomAdditionally Additional information about the rooms without its name
+     * @param isAvailable Does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract List<Appointment> search(Time time, int day, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
+    /**
+     * Searches for Appointment in table with given information
+     * @param date Search for this day
+     * @param isAvailable Does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract List<Appointment> search(LocalDate date, boolean isAvailable) throws InvalidDateException;
 
+    /**
+     * Searches for Appointment in table with given information
+     * @param date Search for this day
+     * @param room Information about room that needs to be found
+     * @param isAvailable Does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException;
 
+    /**
+     * Searches for Appointment in table with given information
+     * @param date Search for this day
+     * @param roomAdditionally Additional information about the rooms without its name
+     * @param isAvailable Does user want available appointments or list of all appointments
+     * @return List of appointment that satisfy conditions
+     * @throws InvalidDateException If date isn't valid
+     */
     public abstract List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
     //TODO needs to be private, its public because of testing and it needs to be in specification
