@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ConfigMapping {
+public class ConfigMapping implements Comparable<ConfigMapping>{
 
     private int index;
     private String custom;
@@ -15,5 +15,10 @@ public class ConfigMapping {
         this.index = index;
         this.custom = custom;
         this.original = original;
+    }
+
+    @Override
+    public int compareTo(ConfigMapping that) {
+        return this.index - that.getIndex();
     }
 }

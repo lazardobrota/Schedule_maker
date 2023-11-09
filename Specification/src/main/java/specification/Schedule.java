@@ -193,6 +193,7 @@ public abstract class Schedule {
         for(ConfigMapping configMapping : columnMappings) {
             mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
         }
+        Collections.sort(columnMappings); //sort by indexes
 
         FileReader fileReader = new FileReader(filePath);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -257,11 +258,12 @@ public abstract class Schedule {
 
     private void loadCSV(String filePath, String configPath) throws IOException, InvalidDateException {
         List<ConfigMapping> columnMappings = readConfig(configPath); //makes config in to list, every element is one row
-        Map<Integer, String> mappings = new HashMap<>(); //sorted map with indexes
+        Map<Integer, String> mappings = new HashMap<>(); //map indexes
         for(ConfigMapping configMapping : columnMappings) {
             mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
         }
 
+        Collections.sort(columnMappings); //sort by indexes
         FileReader fileReader = new FileReader(filePath);
         CSVParser parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(fileReader);
 
@@ -350,6 +352,7 @@ public abstract class Schedule {
         for(ConfigMapping configMapping : columnMappings) {
             mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
         }
+        Collections.sort(columnMappings); //sort by indexes
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
 
@@ -378,7 +381,7 @@ public abstract class Schedule {
                         save.add(startDateTime.format(formatter));
                         break;
                     case "end": //add endDate and endTime
-                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getStartTime());
+                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getEndTime());
                         save.add(endDateTime.format(formatter));
                         break;
                     case "day": //add day
@@ -415,6 +418,7 @@ public abstract class Schedule {
         for(ConfigMapping configMapping : columnMappings) {
             mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
         }
+        Collections.sort(columnMappings); //sort by indexes
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
 
@@ -438,6 +442,7 @@ public abstract class Schedule {
 
         StringBuilder headers = new StringBuilder();
         for (ConfigMapping configMapping : columnMappings) {
+            if (configMapping.getIndex() == -1) continue;
             headers.append(configMapping.getCustom() + ", ");
         }
         headers = new StringBuilder(headers.toString().substring(0 , headers.length() - 2)); // remove last ", "
@@ -454,7 +459,7 @@ public abstract class Schedule {
                 String columnName = configMapping.getCustom(); //save custom name for additional if needed
                 switch (mappings.get(columnIndex)) {
                     case "roomName": //Room name
-                        headers.append(appoint.getRoom().getRoomName()).append(", ");
+                        save.append(appoint.getRoom().getRoomName()).append(", ");
                         break;
                     case "roomAdditional": //hashmap of room
                         save.append(appoint.getRoom().getAdditionally().get(columnName)).append(", ");
@@ -464,7 +469,7 @@ public abstract class Schedule {
                         save.append(startDateTime.format(formatter)).append(", ");
                         break;
                     case "end": //add endDate and endTime
-                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getStartTime());
+                        LocalDateTime endDateTime = LocalDateTime.of(appoint.getTime().getEndDate(), appoint.getTime().getEndTime());
                         save.append(endDateTime.format(formatter)).append(", ");
                         break;
                     case "day": //add day
