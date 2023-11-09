@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
 public class Room {
     //todo dodatni resursi i kapacitet
-    private HashMap<String, String> additionally = new HashMap<>();//additional columns
+    private Map<String, String> additionally = new HashMap<>();//additional columns
 
     private String roomName;
 

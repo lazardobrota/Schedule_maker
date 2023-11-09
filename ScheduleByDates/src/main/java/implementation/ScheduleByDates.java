@@ -186,7 +186,7 @@ public class ScheduleByDates extends Schedule {
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
+    public List<Appointment> search(Time time, int day, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
         List<Appointment> appointmentList = new ArrayList<>();
         List<Time> times = makeTimes(time, day);
         List<Appointment> check;
@@ -277,7 +277,7 @@ public class ScheduleByDates extends Schedule {
 
     //TODO Pronadji na osnovu svega sem datuma sta zeli i onda od toga uradi covertToAvailable
     @Override
-    public List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
+    public List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
 
         List<Appointment> check;

@@ -1,17 +1,19 @@
 package specification;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.Map;
 
 //Represent set time, one instace of Time represent one row
 @Getter
 @Setter
 public class Time {
-    private HashMap<String, String> additionally = new HashMap<>();//additional columns
+    private Map<String, String> additionally = new HashMap<>();//additional columns
 
     //private LocalDate date; // only one date since class Time represent one row
 

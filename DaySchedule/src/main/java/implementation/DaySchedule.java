@@ -8,10 +8,7 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class DaySchedule extends Schedule {
 
@@ -236,7 +233,7 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
+    public List<Appointment> search(Time time, int day, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
         return null;
     }
 
@@ -251,7 +248,7 @@ public class DaySchedule extends Schedule {
     }
 
     @Override
-    public List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
+    public List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         return null;
     }
 

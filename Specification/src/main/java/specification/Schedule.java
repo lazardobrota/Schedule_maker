@@ -1,5 +1,11 @@
 package specification;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import exceptions.InvalidDateException;
 import importexport.ConfigMapping;
 import lombok.Getter;
@@ -8,8 +14,11 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import specification.serializer.MyRoomSerializer;
+import specification.serializer.MyTimeSerializer;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -85,7 +94,7 @@ public abstract class Schedule {
         return times;
     }
 
-    protected boolean compareAdditional(HashMap<String, String> map, HashMap<String, String> map2) {
+    protected boolean compareAdditional(Map<String, String> map, Map<String, String> map2) {
         for (Map.Entry<String, String> set : map2.entrySet()) {
             //If our element doesn't have that key, or they are not the same, return false
             if (!map.containsKey(set.getKey()) || !map.get(set.getKey()).equals(set.getValue()))
@@ -143,8 +152,82 @@ public abstract class Schedule {
      *
      * @return
      */
-    public boolean importJson() {
+    public boolean importJson(String filePath, String configPath)  throws IOException, InvalidDateException{
+        loadJson(filePath, configPath);
         return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean exportJson(String filePath, String configPath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.registerModule(new JavaTimeModule());
+
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(Time.class, new MyTimeSerializer());
+        module.addSerializer(Room.class, new MyRoomSerializer());
+        objectMapper.registerModule(module);
+        objectMapper.writeValue(Paths.get(filePath).toFile(), this.getAppointments());
+        return true;
+    }
+
+
+    private void loadJson(String filePath, String configPath) throws IOException, InvalidDateException{
+
+        //Makes index, custom name and original name
+        List<ConfigMapping> columnMappings = readConfig(configPath); //makes config in to list, every element is one row
+        Map<Integer, String> mappings = new HashMap<>(); //sorted map with indexes
+        for(ConfigMapping configMapping : columnMappings) {
+            mappings.put(configMapping.getIndex(), configMapping.getOriginal()); //sets index and original
+        }
+
+        FileReader fileReader = new FileReader(filePath);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+
+        //Turn blocks of json info into rows
+        List<JsonNode> jsonBlocks = objectMapper.readValue(fileReader, new TypeReference<List<JsonNode>>(){});
+
+        for (JsonNode jsonNode : jsonBlocks) {
+            Appointment appointment = new Appointment(new Room(), new Time());
+
+            for (ConfigMapping configMapping : columnMappings) {
+                int columnIndex = configMapping.getIndex();
+
+                if (columnIndex == -1) continue;
+
+                String columnCustomName = configMapping.getCustom();
+                switch (mappings.get(columnIndex)) {
+                    case "roomName": //Room name
+                        appointment.getRoom().setRoomName(jsonNode.get(columnCustomName).asText());
+                        break;
+                    case "roomAdditional": //hashmap of room
+                        appointment.getRoom().getAdditionally().put(columnCustomName, jsonNode.get(columnCustomName).asText());
+                        break;
+                    case "start": //sets startDate and startTime
+                        LocalDateTime startDateTime = LocalDateTime.parse(jsonNode.get(columnCustomName).asText(), formatter);
+                        appointment.getTime().setStartDate(LocalDate.of(startDateTime.getYear(), startDateTime.getMonth(), startDateTime.getDayOfMonth()));
+                        appointment.getTime().setStartTime(LocalTime.of(startDateTime.getHour(), startDateTime.getMinute()));
+                        break;
+                    case "end": //sets endDate and endTime
+                        LocalDateTime endDateTime = LocalDateTime.parse(jsonNode.get(columnCustomName).asText(), formatter);
+                        appointment.getTime().setEndDate(LocalDate.of(endDateTime.getYear(), endDateTime.getMonth(), endDateTime.getDayOfMonth()));
+                        appointment.getTime().setEndTime(LocalTime.of(endDateTime.getHour(), endDateTime.getMinute()));
+                        break;
+                    case "day": //set day
+                        appointment.getTime().setDay(Integer.parseInt(jsonNode.get(columnCustomName).asText()));
+                        break;
+                    case "timeAdditional": //hashmap of time
+                        appointment.getTime().getAdditionally().put(columnCustomName, jsonNode.get(columnCustomName).asText());
+                        break;
+                }
+            }
+
+            this.addAppointment(appointment, appointment.getTime().getDay());
+        }
     }
 
     /**
@@ -167,25 +250,25 @@ public abstract class Schedule {
         FileReader fileReader = new FileReader(filePath);
         CSVParser parser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(fileReader);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(mappings.get(-1)); //gets how date should be formatted since its index is always -1
 
         //Goes throw csv file
         for (CSVRecord record : parser) {
             Appointment appointment = new Appointment(new Room(), new Time()); //new appointment for that row
 
             //Goes throw all index
-            for (ConfigMapping entry : columnMappings) {
-                int columnIndex = entry.getIndex();
+            for (ConfigMapping configMapping : columnMappings) {
+                int columnIndex = configMapping.getIndex();
 
                 if(columnIndex == -1) continue;
 
-                String columnName = entry.getCustom(); //save custom name for additional if needed
+                String columnCustomName = configMapping.getCustom(); //save custom name for additional if needed
                 switch (mappings.get(columnIndex)) {
                     case "roomName": //Room name
                         appointment.getRoom().setRoomName(record.get(columnIndex));
                         break;
                     case "roomAdditional": //hashmap of room
-                        appointment.getRoom().getAdditionally().put(columnName, record.get(columnIndex));
+                        appointment.getRoom().getAdditionally().put(columnCustomName, record.get(columnIndex));
                         break;
                     case "start": //sets startDate and startTime
                         LocalDateTime startDateTime = LocalDateTime.parse(record.get(columnIndex), formatter);
@@ -201,7 +284,7 @@ public abstract class Schedule {
                         appointment.getTime().setDay(Integer.parseInt(record.get(columnIndex)));
                         break;
                     case "timeAdditional": //hashmap of time
-                        appointment.getTime().getAdditionally().put(columnName, record.get(columnIndex));
+                        appointment.getTime().getAdditionally().put(columnCustomName, record.get(columnIndex));
                         break;
                 }
             }
@@ -227,14 +310,6 @@ public abstract class Schedule {
 
 
         return mappings;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public boolean exportJson() {
-        return true;
     }
 
     /**
@@ -392,13 +467,13 @@ public abstract class Schedule {
 
     public abstract List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException;
 
-    public abstract List<Appointment> search(Time time, int day, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
+    public abstract List<Appointment> search(Time time, int day, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
     public abstract List<Appointment> search(LocalDate date, boolean isAvailable) throws InvalidDateException;
 
     public abstract List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException;
 
-    public abstract List<Appointment> search(LocalDate date, HashMap<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
+    public abstract List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
     //TODO needs to be private, its public because of testing and it needs to be in specification
     //TODO Na osnovu prosledjenog appointmenta, nalazi u listi appointments sve to tome odgovara i sacuva, zatim nad tim radi convertToAvailable!!!!!
