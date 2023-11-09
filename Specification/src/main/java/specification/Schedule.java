@@ -403,8 +403,11 @@ public abstract class Schedule {
     }
 
     /**
-     *
-     * @return
+     * Makes file with given path that will have exported data in pdf format
+     * @param path Path to file that will be exported to
+     * @param configPath Path to config
+     * @return boolean, true if export went well
+     * @throws IOException Something went wrong with export to file
      */
     public boolean exportPDF(String path, String configPath) throws IOException {
         List<ConfigMapping> columnMappings = readConfig(configPath); //sets index, custom and original
