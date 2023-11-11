@@ -76,7 +76,7 @@ public class DayScheduleTest {
         assertEquals(0, daySchedule.getAppointments().size());
 
         //Between 17.10.2023. - 27.10.2023.
-        System.out.println("Between 15.10.2023. - 27.10.2023.");
+        System.out.println("Between 17.10.2023. - 27.10.2023.");
         daySchedule.addAppointment(appointment, 1);
         Appointment tmp = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
         tmp.getTime().setStartDate(LocalDate.of(2023, 10, 17));
