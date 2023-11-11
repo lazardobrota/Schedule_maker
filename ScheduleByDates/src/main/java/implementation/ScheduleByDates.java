@@ -275,7 +275,6 @@ public class ScheduleByDates extends Schedule {
         return appointmentList;
     }
 
-    //TODO Pronadji na osnovu svega sem datuma sta zeli i onda od toga uradi covertToAvailable
     @Override
     public List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();

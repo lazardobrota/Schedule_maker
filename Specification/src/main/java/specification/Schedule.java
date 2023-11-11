@@ -175,7 +175,7 @@ public abstract class Schedule {
      */
     public boolean exportJson(String path) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new JavaTimeModule()); // LocaleDateTime needs this
 
         SimpleModule module = new SimpleModule();
         module.addSerializer(Appointment.class, new MyAppointmentSerializer());

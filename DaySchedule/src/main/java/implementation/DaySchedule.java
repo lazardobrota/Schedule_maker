@@ -220,52 +220,273 @@ public class DaySchedule extends Schedule {
         return false;
     }
 
-    //TODO
     @Override
     public List<Appointment> search(Time time, int day, boolean isAvailable) throws InvalidDateException{
-        List<Appointment> appointmentList = new ArrayList<>();
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
         List<Time> times = makeTimes(time, day);
-        List<Appointment> check;
 
-        if (!isAvailable) //If looking for Appointments
-            check = new ArrayList<>(this.getAppointments());
-        else //If looking for available appointments
-            check = new ArrayList<>(convertToAvailable(this.getAppointments()));
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
 
         for (Time t : times) {
-            for (Appointment a: check) {
-                //If true then we found element
-                if (compareTime(a.getTime(), t))
-                    appointmentList.add(a);
+            for (Appointment a: this.getAppointments()) {
+                List<Appointment> oneDays;
+                if (!isAvailable) //If looking for Appointments
+                    oneDays = convertToDays(a); //range to multi days with specific day
+                else //If looking for available appointments
+                    oneDays = days;
 
+                for (Appointment oneDay : oneDays) {
+                    //If true then we found element
+                    if (!compareTime(oneDay.getTime(), t))
+                        continue;
+
+                    //Looking for appointments
+                    if (!isAvailable) {
+                        appointmentList.add(a);
+                        break;
+                    }
+
+                    //Looking for AVAILABLE appointments
+                    Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                    tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                    appointmentList.add(tmp);
+                }
             }
         }
-        return appointmentList;
+        return new ArrayList<>(appointmentList);
     }
 
     @Override
     public List<Appointment> search(Time time, int day, Room room, boolean isAvailable) throws InvalidDateException{
-        return null;
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
+        List<Time> times = makeTimes(time, day);
+
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
+
+        for (Time t : times) {
+            for (Appointment a: this.getAppointments()) {
+                List<Appointment> oneDays;
+                if (!isAvailable) //If looking for Appointments
+                    oneDays = convertToDays(a); //range to multi days with specific day
+                else //If looking for available appointments
+                    oneDays = days;
+
+                for (Appointment oneDay : oneDays) {
+                    //If true then we found element
+                    if (!(compareTime(oneDay.getTime(), t) && compareRoom(oneDay.getRoom(), room)))
+                        continue;
+
+                    //Looking for appointments
+                    if (!isAvailable) {
+                        appointmentList.add(a);
+                        break;
+                    }
+
+                    //Looking for AVAILABLE appointments
+                    Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                    tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                    appointmentList.add(tmp);
+                }
+            }
+        }
+        return new ArrayList<>(appointmentList);
     }
 
     @Override
     public List<Appointment> search(Time time, int day, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException{
-        return null;
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
+        List<Time> times = makeTimes(time, day);
+
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
+
+        for (Time t : times) {
+            for (Appointment a: this.getAppointments()) {
+                List<Appointment> oneDays;
+                if (!isAvailable) //If looking for Appointments
+                    oneDays = convertToDays(a); //range to multi days with specific day
+                else //If looking for available appointments
+                    oneDays = days;
+
+                for (Appointment oneDay : oneDays) {
+                    //If true then we found element
+                    if (!(compareTime(oneDay.getTime(), t) && compareAdditional(oneDay.getRoom().getAdditionally(), roomAdditionally)))
+                        continue;
+
+                    //Looking for appointments
+                    if (!isAvailable) {
+                        appointmentList.add(a);
+                        break;
+                    }
+
+                    //Looking for AVAILABLE appointments
+                    Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                    tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                    appointmentList.add(tmp);
+                }
+            }
+        }
+        return new ArrayList<>(appointmentList);
     }
 
     @Override
     public List<Appointment> search(LocalDate date, boolean isAvailable) throws InvalidDateException {
-        return null;
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
+
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
+
+        for (Appointment a: this.getAppointments()) {
+            List<Appointment> oneDays;
+            if (!isAvailable) //If looking for Appointments
+                oneDays = convertToDays(a); //range to multi days with specific day
+            else //If looking for available appointments
+                oneDays = days;
+
+            for (Appointment oneDay : oneDays) {
+                //If true then we found element
+                if (!(oneDay.getTime().getStartDate().equals(date) && oneDay.getTime().getEndDate().equals(date)))
+                    continue;
+
+                //Looking for appointments
+                if (!isAvailable) {
+                    appointmentList.add(a);
+                    break;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                appointmentList.add(tmp);
+            }
+        }
+        return new ArrayList<>(appointmentList);
     }
 
     @Override
     public List<Appointment> search(LocalDate date, Room room, boolean isAvailable) throws InvalidDateException {
-        return null;
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
+
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
+
+        for (Appointment a: this.getAppointments()) {
+            List<Appointment> oneDays;
+            if (!isAvailable) //If looking for Appointments
+                oneDays = convertToDays(a); //range to multi days with specific day
+            else //If looking for available appointments
+                oneDays = days;
+
+            for (Appointment oneDay : oneDays) {
+                //If true then we found element
+                if (!(oneDay.getTime().getStartDate().equals(date) && oneDay.getTime().getEndDate().equals(date) && compareRoom(oneDay.getRoom(), room)))
+                    continue;
+
+                //Looking for appointments
+                if (!isAvailable) {
+                    appointmentList.add(a);
+                    break;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                appointmentList.add(tmp);
+            }
+        }
+        return new ArrayList<>(appointmentList);
     }
 
     @Override
     public List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException {
-        return null;
+        Set<Appointment> appointmentList = new HashSet<>(); //hashset so duplicates can't spawn if adding range
+
+        //If looking for available turn everything in single day and then turn that in available
+        List<Appointment> days = new ArrayList<>();
+        if (isAvailable) {
+            for (Appointment a : this.getAppointments()) {
+                days.addAll(convertToDays(a));
+            }
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+        }
+
+        for (Appointment a: this.getAppointments()) {
+            List<Appointment> oneDays;
+            if (!isAvailable) //If looking for Appointments
+                oneDays = convertToDays(a); //range to multi days with specific day
+            else //If looking for available appointments
+                oneDays = days;
+
+            for (Appointment oneDay : oneDays) {
+                //If true then we found element
+                if (!(oneDay.getTime().getStartDate().equals(date) && oneDay.getTime().getEndDate().equals(date) &&  compareAdditional(oneDay.getRoom().getAdditionally(), roomAdditionally)))
+                    continue;
+
+                //Looking for appointments
+                if (!isAvailable) {
+                    appointmentList.add(a);
+                    break;
+                }
+
+                //Looking for AVAILABLE appointments
+                Appointment tmp = new Appointment(new Room(oneDay.getRoom()), new Time(oneDay.getTime()));
+                tmp.getRoom().setAdditionally(new HashMap<>()); //Sets hashmap to empty when looking for available in range
+                appointmentList.add(tmp);
+            }
+        }
+        return new ArrayList<>(appointmentList);
+    }
+
+    private List<Appointment> convertToDays(Appointment appointment) throws InvalidDateException {
+        List<Appointment> appointments = new ArrayList<>();
+
+        LocalDate date = findDateWithDay(appointment.getTime().getStartDate(), appointment.getTime().getDay());
+        int weeks = weeksBetween(date, appointment.getTime().getEndDate()); //throws exception
+
+        for (int i = 0; i <= weeks; i++) {
+            Appointment appoint = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
+            appoint.getTime().setStartDate(date);
+            appoint.getTime().setEndDate(date);
+
+            appointments.add(appoint);
+
+            date = date.plusDays(7);
+        }
+
+        Collections.sort(appointments);
+        return appointments;
     }
 
     //-1 - aren't same, 0

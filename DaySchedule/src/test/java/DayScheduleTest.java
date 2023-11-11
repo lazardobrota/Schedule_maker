@@ -7,6 +7,7 @@ import specification.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,6 +55,248 @@ public class DayScheduleTest {
         System.out.println(ex.getMessage());
         println(daySchedule.getAppointments());
         assertEquals(2, daySchedule.getAppointments().size());
+    }
+
+    @Test
+    public void searchDateTest() throws InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        appointment.getRoom().setRoomName("raf2");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        System.out.println("None, 18.10.2023.");
+        List<Appointment> a = daySchedule.search(LocalDate.of(2023, 10, 18), false);
+        println(a);
+        assertEquals(0, a.size());
+
+        //Without last and first
+        System.out.println("Date that does exist: 16.10.2023.");
+        time.setEndDate(LocalDate.of(2023, 10, 25));
+        a = daySchedule.search(time, 1, false);
+        println(a);
+        assertEquals(2, a.size());
+    }
+    @Test
+    public void searchDateDayRoomTest() throws InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        daySchedule.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        Time t = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 10), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        //10.10.2023. - 10.11.2023. raf2
+        System.out.println("10.10.2023. - 10.11.2023. raf2");
+        List<Appointment> a = daySchedule.search(t, 1, room, false);
+        println(a);
+        assertEquals(1, a.size());
+
+        //10.10.2023. - 10.11.2023. raf2 9-12h available
+        System.out.println("10.10.2023. - 10.11.2023. raf2 9-12h available");
+        t.setStartTime(LocalTime.of(9, 0));
+        a = daySchedule.search(t, 1, room, true);
+        println(a);
+        assertEquals(4, a.size());
+    }
+
+    @Test
+    public void searchDateAdditionalTest() throws InvalidDateException {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Jefimija");
+
+        Room room = new Room(map, "raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 1), LocalDate.of(2024, 1, 1));
+
+        daySchedule.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        //Search date
+        System.out.println("Search date");
+        List<Appointment> a = daySchedule.search(LocalDate.of(2023, 10, 16),  map, false);
+        println(a);
+        assertEquals(2, a.size());
+
+        //Search available in range
+        System.out.println("Search available in range");
+        Time tmp = new Time(LocalDate.of(2023, 10, 5), LocalDate.of(2023, 10, 20), LocalTime.of(6, 0), LocalTime.of(17, 0));
+        a = daySchedule.search(tmp, 1,  map, true);
+        println(a);
+        assertEquals(6, a.size());
+
+        //Specific available
+        System.out.println("Specific available");
+        a = daySchedule.search(LocalDate.of(2023, 10, 16), map, true);
+        println(a);
+        assertEquals(4, a.size());
+
+
+        map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Zdravo");
+        a = daySchedule.search(LocalDate.of(2023, 10, 16), map, false);
+        println(a);
+        assertEquals(0, a.size());
+    }
+
+    @Test
+    public void searchDateRoomTest() throws InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        daySchedule.addAppointment(appointment, 1);
+
+        appointment.getRoom().setRoomName("raf2");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+       //16.10.2023. raf2
+        System.out.println("16.10.2023. raf2");
+        List<Appointment> a = daySchedule.search(LocalDate.of(2023, 10, 16), room, false);
+        println(a);
+        assertEquals(1, a.size());
+
+        //18.10.2023. raf2 available
+        System.out.println("18.10.2023. raf2 available");
+        a = daySchedule.search(LocalDate.of(2023, 10, 18), room, true);
+        println(a);
+        assertEquals(1, a.size());
+
+        System.out.println("16.10.2023. raf2 available");
+        a = daySchedule.search(LocalDate.of(2023, 10, 16), room, true);
+        println(a);
+        assertEquals(2, a.size());
+    }
+
+    @Test
+    public void searchDateDayAdditionalTest() throws InvalidDateException {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Jefimija");
+
+        Room room = new Room(map, "raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        //table between two months
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+
+        daySchedule.addAppointment(appointment, 1);
+
+        System.out.println("Add new room");
+        appointment.getRoom().setRoomName("raf2");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        System.out.println("Search in range appointments");
+        Time t = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 10), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        List<Appointment> a = daySchedule.search(t, 1, map, false);
+        println(a);
+        assertEquals(2, a.size());
+
+        System.out.println("Search at 9:00h with additional available");
+        t.setStartTime(LocalTime.of(9, 0));
+        a = daySchedule.search(t, 1, map, true);
+        println(a);
+        assertEquals(8, a.size());
+
+        //Regular search
+//        System.out.println("Regular search");
+//        a = daySchedule.search(LocalDate.of(2023, 10, 16), true);
+//        println(a);
+
+
+        map = new HashMap<>();
+        map.put("Profesor", "Surla");
+        map.put("Asistent", "Zdravo");
+        a = daySchedule.search(t, 1, map, false);
+        println(a);
+        assertEquals(0, a.size());
+    }
+
+    @Test
+    public void searchDateDayAvailableTest() throws InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+
+        //10.10.2023 to 30.10.2023. monday
+        System.out.println("10.10.2023 to 30.10.2023. monday");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        //1.10.2023. - 17.10.2023. 8-12h
+        System.out.println("1.10.2023. - 17.10.2023. 8-15h");
+        Time tmp = new Time(time);
+        tmp.setStartTime(LocalTime.of(8, 0));
+        tmp.setEndTime(LocalTime.of(15, 0));
+        List<Appointment> a = daySchedule.search(tmp, 1, true);
+        assertEquals(6, a.size());
+        println(a);
+    }
+
+    @Test
+    public void searchDateDayTest() throws InvalidDateException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+
+        //10.10.2023 to 30.10.2023. monday
+        System.out.println("10.10.2023 to 30.10.2023. monday");
+        daySchedule.addAppointment(appointment, 1);
+        println(daySchedule.getAppointments());
+
+        //1.10.2023. - 17.10.2023.
+        System.out.println("1.10.2023. - 17.10.2023.");
+        Time tmp = new Time(time);
+        tmp.setStartDate(LocalDate.of(2023, 10, 1));
+        tmp.setEndDate(LocalDate.of(2023, 10, 17));
+        List<Appointment> a = daySchedule.search(tmp, 1, false);
+        assertEquals(1, a.size());
+        println(a);
+
+        //10.10.2023 to 30.10.2023. tuesday
+        System.out.println("10.10.2023 to 30.10.2023. tuesday");
+        daySchedule.addAppointment(appointment, 2);
+        println(daySchedule.getAppointments());
+        assertEquals(2, daySchedule.getAppointments().size());
+
+        //1.10.2023. - 17.10.2023.
+        System.out.println("1.10.2023. - 17.10.2023.");
+        a = daySchedule.search(tmp, 2, false);
+        assertEquals(1, a.size());
+        println(a);
     }
 
     @Test
@@ -155,5 +398,11 @@ public class DayScheduleTest {
         }
 
         System.out.println("\n\n\n");
+    }
+
+    private Appointment setDateAppoint(Appointment appointment, LocalDate startDate, LocalDate endDate) {
+        appointment.getTime().setStartDate(startDate);
+        appointment.getTime().setEndDate(endDate);
+        return appointment;
     }
 }

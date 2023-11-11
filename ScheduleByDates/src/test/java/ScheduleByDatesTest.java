@@ -178,7 +178,6 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    //Needs to be fixed
     public void searchDate() throws InvalidDateException{
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
