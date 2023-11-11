@@ -1,0 +1,272 @@
+[
+  {
+    "Dan": 1,
+    "Ucionica": "RAF1",
+    "Kraj": "10/30/2023 11:15",
+    "Pocetak": "10/29/2023 09:15",
+    "Predmet": "UUP",
+    "Profesor": "Mladen Jovanovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF2",
+    "Kraj": "10/30/2023 12:30",
+    "Pocetak": "10/29/2023 09:30",
+    "Predmet": "SK",
+    "Profesor": "Bojana Dimic Surla",
+    "Racunar": "NE"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF3",
+    "Kraj": "10/30/2023 13:00",
+    "Pocetak": "10/29/2023 10:00",
+    "Predmet": "UUP",
+    "Profesor": "Lazar Dejanovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF4",
+    "Kraj": "10/30/2023 13:45",
+    "Pocetak": "10/29/2023 10:45",
+    "Predmet": "VP",
+    "Profesor": "Milos Radenkovic",
+    "Racunar": "NE"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF5",
+    "Kraj": "10/30/2023 13:15",
+    "Pocetak": "10/29/2023 11:15",
+    "Predmet": "UUP",
+    "Profesor": "Jefimija Najdic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF6",
+    "Kraj": "10/30/2023 13:30",
+    "Pocetak": "10/29/2023 11:30",
+    "Predmet": "UUP",
+    "Profesor": "Zarko Radenkovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF7",
+    "Kraj": "10/30/2023 15:00",
+    "Pocetak": "10/29/2023 12:00",
+    "Predmet": "IS",
+    "Profesor": "Milan Tomic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF1",
+    "Kraj": "10/30/2023 15:15",
+    "Pocetak": "10/29/2023 12:15",
+    "Predmet": "UUP",
+    "Profesor": "Marko Mladenovic",
+    "Racunar": "NE"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF2",
+    "Kraj": "10/30/2023 15:30",
+    "Pocetak": "10/29/2023 12:30",
+    "Predmet": "IS",
+    "Profesor": "Igor Ciganovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF3",
+    "Kraj": "10/30/2023 15:00",
+    "Pocetak": "10/29/2023 13:00",
+    "Predmet": "UUP",
+    "Profesor": "Nikola Redzic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF4",
+    "Kraj": "10/30/2023 16:45",
+    "Pocetak": "10/29/2023 13:45",
+    "Predmet": "SK",
+    "Profesor": "Jefimija Najdic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF5",
+    "Kraj": "10/30/2023 17:15",
+    "Pocetak": "10/29/2023 14:15",
+    "Predmet": "SJ",
+    "Profesor": "Milos Radenkovic",
+    "Racunar": "NE"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF6",
+    "Kraj": "10/30/2023 16:30",
+    "Pocetak": "10/29/2023 14:30",
+    "Predmet": "TS",
+    "Profesor": "Sava Ivkovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF7",
+    "Kraj": "10/30/2023 18:00",
+    "Pocetak": "10/29/2023 15:00",
+    "Predmet": "DS",
+    "Profesor": "Mihail Jovanoski",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF1",
+    "Kraj": "10/30/2023 17:15",
+    "Pocetak": "10/29/2023 15:15",
+    "Predmet": "SK",
+    "Profesor": "Nikola Redzic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF2",
+    "Kraj": "10/30/2023 17:30",
+    "Pocetak": "10/29/2023 15:30",
+    "Predmet": "UUP",
+    "Profesor": "Vanja Matovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF3",
+    "Kraj": "10/30/2023 19:00",
+    "Pocetak": "10/29/2023 16:00",
+    "Predmet": "IS",
+    "Profesor": "Jelena Vasiljevic",
+    "Racunar": "NE"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF4",
+    "Kraj": "10/30/2023 19:45",
+    "Pocetak": "10/29/2023 16:45",
+    "Predmet": "TS",
+    "Profesor": "Sava Ivkovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF6",
+    "Kraj": "10/30/2023 19:30",
+    "Pocetak": "10/29/2023 17:30",
+    "Predmet": "NWP",
+    "Profesor": "Nikola Redzic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF7",
+    "Kraj": "10/30/2023 20:00",
+    "Pocetak": "10/29/2023 18:00",
+    "Predmet": "NWP",
+    "Profesor": "Stefan Antic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF2",
+    "Kraj": "10/31/2023 15:30",
+    "Pocetak": "10/30/2023 12:30",
+    "Predmet": "IS",
+    "Profesor": "Igor Ciganovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF4",
+    "Kraj": "10/31/2023 16:45",
+    "Pocetak": "10/30/2023 13:45",
+    "Predmet": "SK",
+    "Profesor": "Jefimija Najdic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF7",
+    "Kraj": "10/31/2023 20:00",
+    "Pocetak": "10/30/2023 18:00",
+    "Predmet": "NWP",
+    "Profesor": "Stefan Antic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF3",
+    "Kraj": "10/31/2023 13:00",
+    "Pocetak": "10/30/2023 10:00",
+    "Predmet": "UUP",
+    "Profesor": "Lazar Dejanovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF1",
+    "Kraj": "10/31/2023 11:15",
+    "Pocetak": "10/30/2023 09:15",
+    "Predmet": "UUP",
+    "Profesor": "Mladen Jovanovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF5",
+    "Kraj": "10/31/2023 13:15",
+    "Pocetak": "10/30/2023 11:15",
+    "Predmet": "UUP",
+    "Profesor": "Jefimija Najdic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF7",
+    "Kraj": "10/31/2023 18:00",
+    "Pocetak": "10/30/2023 15:00",
+    "Predmet": "IS",
+    "Profesor": "Milan Tomic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF6",
+    "Kraj": "10/31/2023 16:30",
+    "Pocetak": "10/30/2023 14:30",
+    "Predmet": "TS",
+    "Profesor": "Sava Ivkovic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF1",
+    "Kraj": "10/31/2023 17:15",
+    "Pocetak": "10/30/2023 15:15",
+    "Predmet": "SK",
+    "Profesor": "Nikola Redzic",
+    "Racunar": "DA"
+  },
+  {
+    "Dan": 1,
+    "Ucionica": "RAF2",
+    "Kraj": "10/31/2023 17:30",
+    "Pocetak": "10/30/2023 15:30",
+    "Predmet": "UUP",
+    "Profesor": "Vanja Matovic",
+    "Racunar": "DA"
+  }
+]
