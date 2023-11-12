@@ -18,10 +18,6 @@ public class ScheduleByDates extends Schedule {
         super(startDate, endDate);
     }
 
-    @Override
-    public void initialization() {
-    }
-
     //adds all or none
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {

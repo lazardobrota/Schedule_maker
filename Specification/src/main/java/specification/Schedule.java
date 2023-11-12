@@ -53,8 +53,6 @@ public abstract class Schedule {
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
         notWorkingDays = new ArrayList<>();
-
-        initialization();
     }
 
     //Add days to startDate to be on that specific date
@@ -519,7 +517,15 @@ public abstract class Schedule {
     /**
      * initializes empty table and fills list of all Exclusive days(Working Sundays) and Not working days (doesn't include Sunday and Saturday)
      */
-    public abstract void initialization();
+    public  void initialization(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+
+        rooms = new HashSet<>();
+        appointments = new ArrayList<>();
+        exclusiveDays = new ArrayList<>();
+        notWorkingDays = new ArrayList<>();
+    }
 
     /**
      * Adds new room to HashSet of all rooms

@@ -1,0 +1,8 @@
+-1 Datum MM/dd/yyyy HH:mm
+3 Pocetak start
+2 Kraj end
+1 Ucionica roomName
+5 Profesor roomAdditional
+4 Predmet timeAdditional
+6 Racunar roomAdditional
+0 Dan day

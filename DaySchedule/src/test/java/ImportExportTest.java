@@ -42,7 +42,7 @@ public class ImportExportTest {
 
         println(daySchedule.getAppointments());
 
-        daySchedule.exportJson("outputjson2.txt");
+        daySchedule.exportJson("outputjson3.txt");
 
     }
 
