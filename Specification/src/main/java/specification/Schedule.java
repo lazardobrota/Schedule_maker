@@ -560,7 +560,7 @@ public abstract class Schedule {
      * @return boolean return true if it can remove old one and add new one
      */
     /**
-     *
+     * Changes old appointments date to new one
      * @param oldAppoint Has room and time information about appointment that needs to be changed
      * @param day On what day should this be
      * @param startDate New start date for old Appointment
@@ -634,7 +634,7 @@ public abstract class Schedule {
     //TODO needs to be private, its public because of testing and it needs to be in specification
     //TODO Na osnovu prosledjenog appointmenta, nalazi u listi appointments sve to tome odgovara i sacuva, zatim nad tim radi convertToAvailable!!!!!
     //From Appointments make list of all available appointments
-    public List<Appointment> convertToAvailable(List<Appointment> appointments) {
+    protected List<Appointment> convertToAvailable(List<Appointment> appointments) {
         List<Appointment> availables = new ArrayList<>();
         LocalTime startTime = LocalTime.of(0, 0);
         LocalDate startDate = this.getStartDate();
@@ -665,7 +665,6 @@ public abstract class Schedule {
         return availables;
     }
 
-    //TODO this shouldn't be added to documentation since its private method
     /**
      * Takes arguments and makes new available Appointment
      * @param appointment real Appointment

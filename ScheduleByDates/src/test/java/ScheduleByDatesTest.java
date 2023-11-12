@@ -386,38 +386,38 @@ public class ScheduleByDatesTest {
         assertTrue(scheduleByDates.removeAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2024, 1, 5)), 1));
     }
 
-    @Test
-    public void convertToAvailableTest() throws InvalidDateException{
-        Room room = new Room("raf1");
-        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
-        Appointment appointment = new Appointment(room, time);
-
-        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
-
-
-        scheduleByDates.addAppointment(appointment, 1);
-        println(scheduleByDates.getAppointments());
-        List<Appointment> a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
-        println(a);
-        assertEquals(26, a.size());
-
-        appointment.getRoom().setRoomName("raf2");
-        scheduleByDates.addAppointment(appointment, 1);
-        println(scheduleByDates.getAppointments());
-        a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
-        println(a);
-        assertEquals(52, a.size());
-
-        System.out.println("Something different");
-        scheduleByDates.getAppointments().clear();
-        appointment.getTime().setStartTime(LocalTime.of(0, 0));
-        appointment.getTime().setEndTime(LocalTime.of(23, 59));
-        scheduleByDates.addAppointment(appointment, 1);
-        scheduleByDates.addAppointment(appointment, 2);
-        println(scheduleByDates.getAppointments());
-        a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
-        println(a);
-    }
+//    @Test
+//    public void convertToAvailableTest() throws InvalidDateException{
+//        Room room = new Room("raf1");
+//        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+//        Appointment appointment = new Appointment(room, time);
+//
+//        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+//
+//
+//        scheduleByDates.addAppointment(appointment, 1);
+//        println(scheduleByDates.getAppointments());
+//        List<Appointment> a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
+//        println(a);
+//        assertEquals(26, a.size());
+//
+//        appointment.getRoom().setRoomName("raf2");
+//        scheduleByDates.addAppointment(appointment, 1);
+//        println(scheduleByDates.getAppointments());
+//        a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
+//        println(a);
+//        assertEquals(52, a.size());
+//
+//        System.out.println("Something different");
+//        scheduleByDates.getAppointments().clear();
+//        appointment.getTime().setStartTime(LocalTime.of(0, 0));
+//        appointment.getTime().setEndTime(LocalTime.of(23, 59));
+//        scheduleByDates.addAppointment(appointment, 1);
+//        scheduleByDates.addAppointment(appointment, 2);
+//        println(scheduleByDates.getAppointments());
+//        a = scheduleByDates.convertToAvailable(scheduleByDates.getAppointments());
+//        println(a);
+//    }
 
     @Test
     @Disabled
