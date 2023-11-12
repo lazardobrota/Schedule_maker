@@ -12,6 +12,7 @@
         <module>DaySchedule</module>
         <module>ScheduleByDates</module>
         <module>Specification</module>
+        <module>TestApplication</module>
     </modules>
 
     <properties>
