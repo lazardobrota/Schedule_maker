@@ -17,14 +17,10 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import specification.serializer.MyAppointmentSerializer;
-import specification.serializer.MyRoomSerializer;
-import specification.serializer.MyTimeSerializer;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
