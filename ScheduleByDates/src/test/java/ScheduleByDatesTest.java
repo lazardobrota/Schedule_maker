@@ -476,8 +476,6 @@ public class ScheduleByDatesTest {
         System.out.println(ex.getMessage());
         System.out.println(scheduleByDates.getAppointments());
 
-        //Check with addAppointment method
-        //TODO This only works on 28.10.2023., next day this code wont work since monday wont be before 12 days
     }
 
     private Appointment setDateAppoint(Appointment appointment, LocalDate startDate, LocalDate endDate) {

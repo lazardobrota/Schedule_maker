@@ -9,7 +9,6 @@ import java.util.Map;
 @Getter
 @Setter
 public class Room {
-    //todo dodatni resursi i kapacitet
     private Map<String, String> additionally = new HashMap<>();//additional columns
 
     private String roomName;

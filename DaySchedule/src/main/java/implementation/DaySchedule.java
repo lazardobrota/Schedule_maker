@@ -16,6 +16,8 @@ public class DaySchedule extends Schedule {
         super(startDate, endDate);
     }
 
+    public DaySchedule() {
+    }
 
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {

@@ -76,8 +76,6 @@ public class Time {
         this.day = that.getDay();
     }
 
-    //TODO Date i vreme mora da se proveri da li se preklapa sa drugim vremenom, mozda je jedna 10.10.2023. - 12.10.2023. 10-12h raf1, a drugi 11.10.2023. 10-12h raf1
-    // to je i dalje preklaanje, isto i za vreme vazi
     @Override
     public boolean equals(Object obj) {
         if (obj == null)

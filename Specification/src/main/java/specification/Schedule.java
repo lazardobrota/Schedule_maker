@@ -37,7 +37,6 @@ public abstract class Schedule {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    //TODO ADD startTime and EndTime
 
     private HashSet<Room> rooms;//hashSet so there is only one of every class
 
@@ -49,6 +48,13 @@ public abstract class Schedule {
         this.startDate = startDate;
         this.endDate = endDate;
 
+        rooms = new HashSet<>();
+        appointments = new ArrayList<>();
+        exclusiveDays = new ArrayList<>();
+        notWorkingDays = new ArrayList<>();
+    }
+
+    public Schedule() {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
@@ -208,6 +214,7 @@ public abstract class Schedule {
                 String columnCustomName = configMapping.getCustom();
                 switch (mappings.get(columnIndex)) {
                     case "roomName": //Room name
+                        this.addRooms(new Room(jsonNode.get(columnCustomName).asText()));
                         appointment.getRoom().setRoomName(jsonNode.get(columnCustomName).asText());
                         break;
                     case "roomAdditional": //hashmap of room
@@ -276,6 +283,7 @@ public abstract class Schedule {
                 String columnCustomName = configMapping.getCustom(); //save custom name for additional if needed
                 switch (mappings.get(columnIndex)) {
                     case "roomName": //Room name
+                        this.addRooms(new Room(record.get(columnIndex)));
                         appointment.getRoom().setRoomName(record.get(columnIndex));
                         break;
                     case "roomAdditional": //hashmap of room
@@ -489,7 +497,6 @@ public abstract class Schedule {
         return true;
     }
 
-    //TODO Da li je bolje imati exception ili boolean
     //Call this function to check parametars of dates
     protected boolean isValidDate(LocalDate date) throws InvalidDateException {
         //For weekend
@@ -555,7 +562,6 @@ public abstract class Schedule {
      */
     public abstract boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException;
 
-    //TODO Da li treba dva appointmenta ili drugacije provera
     /**
      * Check if old appointment exist and sets date to new date if it isnt already taken
      * @param oldAppoint needs to be removed
@@ -633,8 +639,6 @@ public abstract class Schedule {
      */
     public abstract List<Appointment> search(LocalDate date, Map<String, String> roomAdditionally, boolean isAvailable) throws InvalidDateException;
 
-    //TODO needs to be private, its public because of testing and it needs to be in specification
-    //TODO Na osnovu prosledjenog appointmenta, nalazi u listi appointments sve to tome odgovara i sacuva, zatim nad tim radi convertToAvailable!!!!!
     //From Appointments make list of all available appointments
     protected List<Appointment> convertToAvailable(List<Appointment> appointments) {
         List<Appointment> availables = new ArrayList<>();
@@ -698,8 +702,8 @@ public abstract class Schedule {
             tmp.getTime().setDay(tmp.getTime().getStartDate().getDayOfWeek().getValue());
             Appointment a = new Appointment(new Room(tmp.getRoom()), new Time(tmp.getTime()));
 
-            a.getTime().setStartTime(LocalTime.of(0, 0));//todo should use starttime
-            a.getTime().setEndTime(LocalTime.of(23, 59));//todo should use endtime
+            a.getTime().setStartTime(LocalTime.of(0, 0));
+            a.getTime().setEndTime(LocalTime.of(23, 59));
             a.getTime().setEndDate(a.getTime().getStartDate());
             //First time start from apponitments start time
             if (!flag) {

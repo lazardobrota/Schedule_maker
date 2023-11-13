@@ -12,7 +12,6 @@ public class Appointment implements Comparable<Appointment>{
         this.time = time;
     }
 
-    //TODO Make test to see if it works
     @Override
     public boolean equals(Object obj) {
         if (obj == null)

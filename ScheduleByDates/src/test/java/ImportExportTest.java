@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ImportExportTest {
 
-    //TODO Ovi fajlovi samo kod mene postoje, nisam hteo da ih stavlja na github
+    //Ovi fajlovi samo kod mene postoje, nisam hteo da ih stavlja na github
     @Test
     public void importExportCSVTest() throws InvalidDateException, IOException {
 

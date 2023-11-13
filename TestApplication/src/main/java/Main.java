@@ -14,10 +14,37 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        //todo odmah prvo unese neki fajl
-        //todo treba da sami izaberu range datuma
-        Schedule schedule = new DaySchedule(LocalDate.of(2023, 8, 1), LocalDate.of(2024, 1, 1));
+
         Scanner scanner = new Scanner(System.in);
+
+        //Makes schedule
+        Schedule schedule = new DaySchedule();
+        while (true) {
+            System.out.println("Write data in this format using dd/mm/yyyy: startDate,endDate");
+            String[] split = scanner.nextLine().split(",");
+            if (split.length != 2) {
+                System.out.println("Incorrect amount of data");
+                continue;
+            }
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            try {
+                LocalDate start = LocalDate.parse(split[0], formatter);
+                LocalDate end = LocalDate.parse(split[1], formatter);
+
+                schedule.initialization(LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth()),
+                        LocalDate.of(end.getYear(), end.getMonth(), end.getDayOfMonth()));
+
+                if (schedule.getEndDate().isBefore(schedule.getStartDate())) {
+                    System.out.println("End date can't be before start date");
+                    continue;
+                }
+                break;
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         while (true) {
             System.out.println("Enter number 0-11");
             System.out.println("1) Add Room");
@@ -30,7 +57,7 @@ public class Main {
             System.out.println("8) Export CSV file");
             System.out.println("9) Export JSON file");
             System.out.println("10) Export PDF file");
-            System.out.println("0) Exist application");
+            System.out.println("0) Exit application");
 
             System.out.println("\n\n\n");
             int choosen = Integer.parseInt(scanner.nextLine());
@@ -303,7 +330,6 @@ public class Main {
                 break;
                 //Export JSON
                 case 9: {
-                    //TODO Iz nekog razloga ne napravi fajl iako kaze da je uspeo
                     System.out.println("Enter file path and config path: filePath");
                     String[] splitFile = scanner.nextLine().split(",");
 
