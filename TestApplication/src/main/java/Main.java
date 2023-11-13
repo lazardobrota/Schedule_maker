@@ -10,10 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -28,12 +25,11 @@ public class Main {
             System.out.println("3) Remove Appointment");
             System.out.println("4) Change Appointment");
             System.out.println("5) Search Appointment");
-            System.out.println("6) Search Available Appointment");
-            System.out.println("7) Import CSV file");
-            System.out.println("8) Import JSON file");
-            System.out.println("9) Export CSV file");
-            System.out.println("10) Export JSON file");
-            System.out.println("11) Export PDF file");
+            System.out.println("6) Import CSV file");
+            System.out.println("7) Import JSON file");
+            System.out.println("8) Export CSV file");
+            System.out.println("9) Export JSON file");
+            System.out.println("10) Export PDF file");
             System.out.println("0) Exist application");
 
             System.out.println("\n\n\n");
@@ -112,16 +108,142 @@ public class Main {
                 break;
                 //Search appointment
                 case 5: {
-                    //TODO
-                }
-                break;
-                //Search Available Appointment
-                case 6: {
-                    //TODO
+
+                    //Is available
+                    System.out.println("Say \"yes\" if searching for available appointments, else say \"0\": ");
+                    boolean isAvailable = false;
+                    if (scanner.nextLine().toLowerCase().equals("yes"))
+                        isAvailable = true;
+
+                    //Room additional
+                    System.out.println("Add additional information about room \"key,value\" or write 0 if you want to stop:");
+                    Map<String, String> roomAdditional = new HashMap<>();
+                    //hashmap room
+                    while (true) {
+                        String[] additional = scanner.nextLine().split(",");
+                        if (additional.length == 1 && additional[0].equals("0"))
+                            break;
+
+                        //If has key and value, has items so it means it has config, that key exists
+                        if (additional.length == 2) {
+                            roomAdditional.put(additional[0], additional[1]);
+                        }
+                        else
+                            System.out.println("Wrong input");
+                    }
+
+
+                    //Room class
+                    System.out.println("Enter room name or say \"0\": ");
+                    String roomName = scanner.nextLine();
+                    Room room = null;
+                    if (!roomName.equals("0")) {
+                        room = new Room(roomAdditional, roomName);
+                    }
+
+                    //Time class
+                    System.out.println("Do you want to have startDateTime, endDateTime, day, timeAdditonal. Say \"yes\" or \"0\": ");
+                    Time time = null;
+                    LocalDate date = null;
+                    if (scanner.nextLine().equalsIgnoreCase("yes")) {
+                        System.out.println("Write data in this format using dd/mm/yyyy hh:mm: startDateTime,endDateTime,day");
+                        String[] split = scanner.nextLine().split(",");
+                        if (split.length != 3) {
+                            System.out.println("Incorrect amount of data");
+                            break;
+                        }
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                        LocalDateTime start = LocalDateTime.parse(split[0], formatter);
+                        LocalDateTime end = LocalDateTime.parse(split[1], formatter);
+
+                        time = new Time(LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth()), LocalDate.of(end.getYear(), end.getMonth(), end.getDayOfMonth()),
+                                LocalTime.of(start.getHour(), start.getMinute()), LocalTime.of(end.getHour(), end.getMinute()));
+                        System.out.println("Add additional information about time \"key,value\" or write 0 if you want to stop:");
+                        Map<String, String> timeAdditional = new HashMap<>();
+                        //hashmap time
+                        while (true) {
+                            String[] additional = scanner.nextLine().split(",");
+                            if (additional.length == 1 && additional[0].equals("0"))
+                                break;
+
+                            //If has key and value, has items so it means it has config, that key exists
+                            if (additional.length == 2) {
+                                timeAdditional.put(additional[0], additional[1]);
+                            }
+                            else
+                                System.out.println("Wrong input");
+                        }
+
+                        time.setAdditionally(timeAdditional);
+                    }
+                    else {
+                        System.out.println("Enter specific date, format \"dd/MM/yyyy\": ");
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                        try {
+                            date = LocalDate.parse(scanner.nextLine(), formatter);
+                        }
+                        catch (Exception e) {
+                            System.out.println(e.getMessage());
+                            break;
+                        }
+                    }
+
+
+                    List<Appointment> appointmentList = new ArrayList<>();
+                    if (date != null && room != null) {
+                        try {
+                            appointmentList = schedule.search(date, room, isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (date != null && !roomAdditional.isEmpty()) {
+                        try {
+                            appointmentList = schedule.search(date, roomAdditional, isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (date != null) {
+                        try {
+                            appointmentList = schedule.search(date, isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (time != null && room != null) {
+                        try {
+                            appointmentList = schedule.search(time, time.getDay(), room, isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (time != null && !roomAdditional.isEmpty()) {
+                        try {
+                            appointmentList = schedule.search(time, time.getDay(), roomAdditional, isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (time != null) {
+                        try {
+                            appointmentList = schedule.search(time, time.getDay(), isAvailable);
+                        } catch (InvalidDateException e) {
+                            System.out.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                    println(appointmentList);
                 }
                 break;
                 //Import CSV
-                case 7: {
+                case 6: {
                     System.out.println("Enter file path and config path: filePath,configPath");
                     String[] splitFile = scanner.nextLine().split(",");
 
@@ -141,7 +263,7 @@ public class Main {
                 }
                 break;
                 //Import JSON
-                case 8: {
+                case 7: {
                     System.out.println("Enter file path and config path: filePath,configPath");
                     String[] splitFile = scanner.nextLine().split(",");
 
@@ -161,7 +283,7 @@ public class Main {
                 }
                 break;
                 //Export CSV
-                case 9: {
+                case 8: {
                     System.out.println("Enter file path and config path: filePath,configPath");
                     String[] splitFile = scanner.nextLine().split(",");
 
@@ -180,7 +302,7 @@ public class Main {
                 }
                 break;
                 //Export JSON
-                case 10: {
+                case 9: {
                     //TODO Iz nekog razloga ne napravi fajl iako kaze da je uspeo
                     System.out.println("Enter file path and config path: filePath");
                     String[] splitFile = scanner.nextLine().split(",");
@@ -200,7 +322,7 @@ public class Main {
                 }
                 break;
                 //Export PDF
-                case 11: {
+                case 10: {
                     System.out.println("Enter file path and config path: filePath");
                     String[] splitFile = scanner.nextLine().split(",");
 

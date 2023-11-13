@@ -14,7 +14,7 @@ public class Room {
 
     private String roomName;
 
-    public Room(HashMap<String, String> additionally, String roomName) {
+    public Room(Map<String, String> additionally, String roomName) {
         this.additionally = additionally;
         this.roomName = roomName;
     }

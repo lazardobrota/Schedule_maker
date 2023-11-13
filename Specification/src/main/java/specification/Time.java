@@ -30,7 +30,7 @@ public class Time {
     //Constructor will accept bool which tells if true that its 10-12h time, else it tells that its 10h + 2 so then i will change it to 10-12h
     //Constructor gets LocalDate, startTime, endTime, bool isEndTime
     //Time "from to", meaning 10-12h
-    public Time(HashMap<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public Time(Map<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.additionally = additionally;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -47,7 +47,7 @@ public class Time {
     }
 
     //Time "from + how" much, meaning 10h + 2 == 10-12h
-    public Time(HashMap<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
+    public Time(Map<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
         this.additionally = additionally;
         this.startDate = startDate;
         this.endDate = endDate;
