@@ -1,9 +1,5 @@
 import exceptions.InvalidDateException;
-import implementation.DaySchedule;
-import specification.Appointment;
-import specification.Room;
-import specification.Schedule;
-import specification.Time;
+import specification.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -15,34 +11,20 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
 
+        try {
+            Class.forName("implementation.DaySchedule"); //makes instance so it calls static block
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Scanner scanner = new Scanner(System.in);
 
         //Makes schedule
-        Schedule schedule = new DaySchedule();
-        while (true) {
-            System.out.println("Write data in this format using dd/mm/yyyy: startDate,endDate");
-            String[] split = scanner.nextLine().split(",");
-            if (split.length != 2) {
-                System.out.println("Incorrect amount of data");
-                continue;
-            }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            try {
-                LocalDate start = LocalDate.parse(split[0], formatter);
-                LocalDate end = LocalDate.parse(split[1], formatter);
-
-                schedule.initialization(LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth()),
-                        LocalDate.of(end.getYear(), end.getMonth(), end.getDayOfMonth()));
-
-                if (schedule.getEndDate().isBefore(schedule.getStartDate())) {
-                    System.out.println("End date can't be before start date");
-                    continue;
-                }
-                break;
-            }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+        Schedule schedule = ScheduleManager.getSchedule();
+        try {
+            schedule.initialization(scanner.nextLine());
+        } catch (IOException | InvalidDateException e) {
+            System.out.println(e.getMessage());
+            return;
         }
 
         while (true) {

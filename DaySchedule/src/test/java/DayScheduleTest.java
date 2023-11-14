@@ -5,6 +5,7 @@ import specification.Appointment;
 import specification.Room;
 import specification.Time;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -14,13 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class DayScheduleTest {
 
+
     @Test
-    public void addAppointmentTestTest() throws InvalidDateException{
+    public void addAppointmentTestTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         //10.10.2023 to 30.10.2023. monday
         daySchedule.addAppointment(appointment, 1);
@@ -58,13 +61,14 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateTest() throws InvalidDateException {
+    public void searchDateTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         daySchedule.addAppointment(appointment, 1);
         println(daySchedule.getAppointments());
@@ -86,13 +90,14 @@ public class DayScheduleTest {
         assertEquals(2, a.size());
     }
     @Test
-    public void searchDateDayRoomTest() throws InvalidDateException {
+    public void searchDateDayRoomTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         daySchedule.addAppointment(appointment, 1);
 
@@ -116,7 +121,7 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateAdditionalTest() throws InvalidDateException {
+    public void searchDateAdditionalTest() throws InvalidDateException, IOException {
         HashMap<String, String> map = new HashMap<>();
         map.put("Profesor", "Surla");
         map.put("Asistent", "Jefimija");
@@ -127,6 +132,7 @@ public class DayScheduleTest {
 
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 1), LocalDate.of(2024, 1, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         daySchedule.addAppointment(appointment, 1);
 
@@ -163,13 +169,14 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateRoomTest() throws InvalidDateException {
+    public void searchDateRoomTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         daySchedule.addAppointment(appointment, 1);
 
@@ -196,7 +203,7 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateDayAdditionalTest() throws InvalidDateException {
+    public void searchDateDayAdditionalTest() throws InvalidDateException, IOException {
         HashMap<String, String> map = new HashMap<>();
         map.put("Profesor", "Surla");
         map.put("Asistent", "Jefimija");
@@ -207,6 +214,7 @@ public class DayScheduleTest {
 
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         daySchedule.addAppointment(appointment, 1);
 
@@ -242,12 +250,13 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateDayAvailableTest() throws InvalidDateException {
+    public void searchDateDayAvailableTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         //10.10.2023 to 30.10.2023. monday
         System.out.println("10.10.2023 to 30.10.2023. monday");
@@ -265,12 +274,13 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void searchDateDayTest() throws InvalidDateException {
+    public void searchDateDayTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         //10.10.2023 to 30.10.2023. monday
         System.out.println("10.10.2023 to 30.10.2023. monday");
@@ -300,12 +310,13 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void removeAppointmentTest() throws InvalidDateException {
+    public void removeAppointmentTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         //10.10.2023 to 30.10.2023. monday
         System.out.println("10.10.2023 to 30.10.2023. monday");
@@ -356,12 +367,13 @@ public class DayScheduleTest {
     }
 
     @Test
-    public void changeAppointmentTest() throws InvalidDateException{
+    public void changeAppointmentTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         //10.10.2023 to 30.10.2023. monday
         daySchedule.addAppointment(appointment, 1);

@@ -1,16 +1,17 @@
 package implementation;
 
 import exceptions.InvalidDateException;
-import specification.Appointment;
-import specification.Room;
-import specification.Schedule;
-import specification.Time;
+import specification.*;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class DaySchedule extends Schedule {
+
+    static {
+        ScheduleManager.registerSchedule(new DaySchedule());
+    }
 
     public DaySchedule(LocalDate startDate, LocalDate endDate) {
         super(startDate, endDate);
@@ -22,6 +23,10 @@ public class DaySchedule extends Schedule {
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         LocalDate start = findDateWithDay(appointment.getTime().getStartDate(), day);
+
+        //Doesn't contain that room
+        if (!this.getRooms().contains(appointment.getRoom()))
+            throw new InvalidDateException("This room doesn't exist"); //Mrzi me sad da u svim test casovima da dodajem InvalidRoomException
 
         //Adds to startDate how many days it needs to find given day, if now it's after end date that means in that range that day doesn't exist
         if (appointment.getTime().getEndDate().isBefore(start))

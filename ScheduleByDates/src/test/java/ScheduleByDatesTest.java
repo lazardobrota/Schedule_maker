@@ -6,6 +6,7 @@ import specification.Appointment;
 import specification.Room;
 import specification.Time;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -32,13 +33,15 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateTimeRoomTest() throws InvalidDateException{
+    public void searchDateTimeRoomTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -57,7 +60,7 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateTimeAdditionalTest() throws InvalidDateException{
+    public void searchDateTimeAdditionalTest() throws InvalidDateException, IOException {
         HashMap<String, String> map = new HashMap<>();
         map.put("Profesor", "Surla");
         map.put("Asistent", "Jefimija");
@@ -68,6 +71,7 @@ public class ScheduleByDatesTest {
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -104,7 +108,7 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateAdditionalTest() throws InvalidDateException{
+    public void searchDateAdditionalTest() throws InvalidDateException, IOException {
         HashMap<String, String> map = new HashMap<>();
         map.put("Profesor", "Surla");
         map.put("Asistent", "Jefimija");
@@ -115,6 +119,7 @@ public class ScheduleByDatesTest {
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 10, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -150,13 +155,15 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateRoomTest() throws InvalidDateException{
+    public void searchDateRoomTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -178,13 +185,14 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDate() throws InvalidDateException{
+    public void searchDate() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
@@ -212,13 +220,14 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateAvailable() throws InvalidDateException{
+    public void searchDateAvailable() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         scheduleByDates.addAppointment(appointment, 1);
         println(scheduleByDates.getAppointments());
@@ -230,13 +239,14 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateTime() throws InvalidDateException{
+    public void searchDateTime() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
         scheduleByDates.addAppointment(appointment, 1);
 
@@ -255,13 +265,15 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void searchDateTimeAvailable() throws InvalidDateException {
+    public void searchDateTimeAvailable() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
 
         scheduleByDates.addAppointment(appointment, 1);
         appointment.getRoom().setRoomName("raf2");
@@ -285,13 +297,15 @@ public class ScheduleByDatesTest {
         assertEquals(10, a.size());
     }
     @Test
-    public void timeEqualsTest() throws InvalidDateException{
+    public void timeEqualsTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0, 40), LocalTime.of(12, 0));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
         scheduleByDates.addAppointment(appointment, 1);
 
 
@@ -299,14 +313,16 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void addAppointmentTest() throws InvalidDateException {
+    public void addAppointmentTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.now().minusHours(3), LocalTime.now());
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
-
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+        scheduleByDates.setStartDate(LocalDate.of(2023, 6, 1));
+        scheduleByDates.setEndDate(LocalDate.of(2024, 1, 1));
         //endDate before startDate exception
         System.out.println(scheduleByDates.getAppointments());
         InvalidDateException ex = assertThrows(InvalidDateException.class, () -> scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.now(), LocalDate.now().minusWeeks(2)), 1));
@@ -348,14 +364,16 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void removeAppointmentTest() throws InvalidDateException {
+    public void removeAppointmentTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
         //table between two months
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
-
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+        scheduleByDates.setStartDate(LocalDate.of(2023, 6, 1));
+        scheduleByDates.setEndDate(LocalDate.of(2024, 1, 1));
         scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);
         System.out.println(scheduleByDates.getAppointments());
         //klasa ekvivalencije
@@ -421,12 +439,13 @@ public class ScheduleByDatesTest {
 
     @Test
     @Disabled
-    public void sortTest() throws InvalidDateException{
+    public void sortTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 12, 30), LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
 
 
         scheduleByDates.addAppointment(appointment, 1);
@@ -448,12 +467,14 @@ public class ScheduleByDatesTest {
     }
 
     @Test
-    public void changeAppointmentTest() throws InvalidDateException {
+    public void changeAppointmentTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.now(), LocalTime.now().plusHours(2));
         Appointment appointment = new Appointment(room, time);
 
         ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
 
         //Check if it has been changes
         scheduleByDates.addAppointment(setDateAppoint(appointment, LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30)), 1);

@@ -45,7 +45,7 @@ public class Room {
             return true;
 
         //If their name is the same
-        return this.getRoomName().equals(that.getRoomName());
+        return this.getRoomName().equalsIgnoreCase(that.getRoomName());
     }
 
     public Room() {

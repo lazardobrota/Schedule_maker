@@ -20,6 +20,7 @@ public class ImportExportTest {
         //table between two months
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 6, 1), LocalDate.of(2024, 1, 1));
 
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
         daySchedule.importCSV("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\termini.csv",
                 "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
         println(daySchedule.getAppointments());
@@ -37,6 +38,7 @@ public class ImportExportTest {
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
 
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
         daySchedule.importJson("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\termini.json",
                 "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
 
@@ -54,6 +56,7 @@ public class ImportExportTest {
 
         DaySchedule daySchedule = new DaySchedule(LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1));
 
+        daySchedule.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
         daySchedule.importCSV("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\termini.csv",
                 "E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\config.txt");
 

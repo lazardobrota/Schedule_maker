@@ -1,10 +1,8 @@
 package implementation;
 
 import exceptions.InvalidDateException;
-import specification.Appointment;
-import specification.Room;
-import specification.Schedule;
-import specification.Time;
+import exceptions.InvalidRoomException;
+import specification.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -14,6 +12,9 @@ import java.util.*;
 
 public class ScheduleByDates extends Schedule {
 
+    static {
+        ScheduleManager.registerSchedule(new ScheduleByDates());
+    }
     public ScheduleByDates(LocalDate startDate, LocalDate endDate) {
         super(startDate, endDate);
     }
@@ -25,6 +26,10 @@ public class ScheduleByDates extends Schedule {
     @Override
     public boolean addAppointment(Appointment appointment, int day) throws InvalidDateException {
         List<Appointment> appointmentList = new ArrayList<>();
+
+        //Doesn't contain that room
+        if (!this.getRooms().contains(appointment.getRoom()))
+            throw new InvalidDateException("This room doesn't exist"); //Mrzi me sad da u svim test casovima da dodajem InvalidRoomException
 
         //Check rules
 

@@ -26,13 +26,15 @@
             <groupId>org.example.schedule.api</groupId>
             <artifactId>DaySchedule</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.example.schedule.api</groupId>
             <artifactId>ScheduleByDates</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
+        -->
     </dependencies>
 </project>

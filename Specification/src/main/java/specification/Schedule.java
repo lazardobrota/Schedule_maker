@@ -21,10 +21,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import specification.serializer.MyAppointmentSerializer;
 
 import java.io.*;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -524,14 +521,54 @@ public abstract class Schedule {
     /**
      * initializes empty table and fills list of all Exclusive days(Working Sundays) and Not working days (doesn't include Sunday and Saturday)
      */
-    public  void initialization(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
 
+    /**
+     * Initialize basic info about schedule
+     * @param filePath file to read basic info about schedule
+     * @throws IOException File must be correct
+     * @throws InvalidDateException End date can't be before start date
+     */
+    public  void initialization(String filePath) throws IOException, InvalidDateException {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
         notWorkingDays = new ArrayList<>();
+
+        FileReader fileReader = new FileReader(filePath);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        String line;
+        boolean first = true;
+        DateTimeFormatter formatter = null;
+        while ((line = bufferedReader.readLine()) != null) {
+
+            //Takes date formater
+            if (first) {
+                formatter = DateTimeFormatter.ofPattern(line);
+                first = false;
+                continue;
+            }
+            String[] splitHeader = line.split(":");
+
+            String[] splitData = splitHeader[1].split(",");
+            switch (splitHeader[0]) {
+                case "ScheduleLast": {
+                    this.setStartDate(LocalDate.parse(splitData[0], formatter));
+                    this.setEndDate(LocalDate.parse(splitData[1], formatter));
+
+                    if (this.getEndDate().isBefore(this.getStartDate()))
+                        throw new InvalidDateException("End Date can't be before start date");
+                }
+                break;
+
+                case "Rooms": {
+                    for (String room : splitData) {
+                        this.addRooms(new Room(room));
+                    }
+                }
+                break;
+            }
+        }
     }
 
     /**
