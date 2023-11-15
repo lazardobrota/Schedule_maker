@@ -33,6 +33,34 @@ public class ScheduleByDatesTest {
     }
 
     @Test
+    public void wrongDaysTesty() throws InvalidDateException, IOException {
+        Room room = new Room("raf1");
+        Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));
+        Appointment appointment = new Appointment(room, time);
+
+        ScheduleByDates scheduleByDates = new ScheduleByDates(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 11, 1));
+        scheduleByDates.initialization("E:\\Programi\\Intellij programi\\5.semestar\\Softverske komponente\\sk-API_class_scheduler_team_lazardobrotakatarinaracic\\metaData.txt");
+
+        //day 7
+        scheduleByDates.addAppointment(appointment, 7);
+        println(scheduleByDates.getAppointments());
+        assertEquals(0, scheduleByDates.getAppointments().size());
+
+        //excluded day
+        appointment.getTime().setEndDate(LocalDate.of(2023, 10, 20));
+        scheduleByDates.getExclusiveDays().add(LocalDate.of(2023, 10, 15));
+        scheduleByDates.addAppointment(appointment, 7);
+        println(scheduleByDates.getAppointments());
+        assertEquals(1, scheduleByDates.getAppointments().size());
+
+        //notWorking day
+        scheduleByDates.getNotWorkingDay().add(LocalDate.of(2023, 10, 16));
+        scheduleByDates.addAppointment(appointment, 1);
+        println(scheduleByDates.getAppointments());
+        assertEquals(1, scheduleByDates.getAppointments().size());
+    }
+
+    @Test
     public void searchDateTimeRoomTest() throws InvalidDateException, IOException {
         Room room = new Room("raf1");
         Time time = new Time(LocalDate.of(2023, 10, 10), LocalDate.of(2023, 10, 30), LocalTime.of(10, 0), LocalTime.of(12, 0));

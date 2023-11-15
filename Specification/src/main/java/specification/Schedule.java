@@ -39,6 +39,7 @@ public abstract class Schedule {
 
     private List<Appointment> appointments; //every index represents one row
     private List<LocalDate> exclusiveDays; // Working Sundays
+    private List<LocalDate> notWorkingDay; // Days that can't be worked on
 
     public Schedule(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
@@ -47,12 +48,14 @@ public abstract class Schedule {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
+        notWorkingDay = new ArrayList<>();
     }
 
     public Schedule() {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
+        notWorkingDay = new ArrayList<>();
     }
 
     //Add days to startDate to be on that specific date
@@ -493,6 +496,11 @@ public abstract class Schedule {
 
     //Call this function to check parameters of dates
     protected boolean isValidDate(LocalDate date) throws InvalidDateException {
+
+        //Excluded days that can't be worked on
+        if (notWorkingDay.contains(date))
+            return false;
+
         //For weekend
         //For Sunday and isn't an exclusive day
         if (date.getDayOfWeek().getValue() == 7 && !exclusiveDays.contains(date)) {
@@ -525,6 +533,7 @@ public abstract class Schedule {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
+        notWorkingDay = new ArrayList<>();
 
         FileReader fileReader = new FileReader(filePath);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -564,6 +573,12 @@ public abstract class Schedule {
                 case "ExclusiveDays": {
                     for (String date : splitData) {
                         this.getExclusiveDays().add(LocalDate.parse(date, formatter));
+                    }
+                }
+                //Add NotWorkingDays
+                case "NotWorkingDays": {
+                    for (String date : splitData) {
+                        this.getNotWorkingDay().add(LocalDate.parse(date, formatter));
                     }
                 }
             }

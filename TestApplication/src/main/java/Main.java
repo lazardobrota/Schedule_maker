@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-
+        //TODO Treba da se doda sta sve moze u hashMapi da postoji za room i time
         try {
             Class.forName("implementation.DaySchedule"); //makes instance so it calls static block
         } catch (ClassNotFoundException e) {
@@ -21,14 +21,15 @@ public class Main {
         //Makes schedule
         Schedule schedule = ScheduleManager.getSchedule();
         try {
+            System.out.println("Enter meta data file: ");
             schedule.initialization(scanner.nextLine());
         } catch (IOException | InvalidDateException e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage() + " Wrong input");
             return;
         }
 
         while (true) {
-            System.out.println("Enter number 0-11");
+            System.out.println("Enter number 0-10");
             System.out.println("1) Add Room");
             System.out.println("2) Add Appointment");
             System.out.println("3) Remove Appointment");
@@ -42,8 +43,15 @@ public class Main {
             System.out.println("0) Exit application");
 
             System.out.println("\n\n\n");
-            int choosen = Integer.parseInt(scanner.nextLine());
-            switch (choosen) {
+            int chosen;
+            try {
+                chosen = Integer.parseInt(scanner.nextLine());
+            }
+            catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
+            switch (chosen) {
                 case 0:
                     scanner.close();
                     return; //leave application
@@ -312,7 +320,7 @@ public class Main {
                 break;
                 //Export JSON
                 case 9: {
-                    System.out.println("Enter file path and config path: filePath");
+                    System.out.println("Enter file path: filePath");
                     String[] splitFile = scanner.nextLine().split(",");
 
                     if (splitFile.length != 1) {
@@ -331,7 +339,7 @@ public class Main {
                 break;
                 //Export PDF
                 case 10: {
-                    System.out.println("Enter file path and config path: filePath");
+                    System.out.println("Enter file path and config path: filePath,configPath");
                     String[] splitFile = scanner.nextLine().split(",");
 
                     if (splitFile.length != 2) {
@@ -347,6 +355,9 @@ public class Main {
                     }
                 }
                 break;
+                default:
+                    System.out.println("Wrong command");
+                    break;
             }
             System.out.println("\n\n\n");
         }
