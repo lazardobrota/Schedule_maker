@@ -39,7 +39,6 @@ public abstract class Schedule {
 
     private List<Appointment> appointments; //every index represents one row
     private List<LocalDate> exclusiveDays; // Working Sundays
-    private List<LocalDate> notWorkingDays; // doesn't include Sunday and Saturday
 
     public Schedule(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
@@ -48,14 +47,12 @@ public abstract class Schedule {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
-        notWorkingDays = new ArrayList<>();
     }
 
     public Schedule() {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
-        notWorkingDays = new ArrayList<>();
     }
 
     //Add days to startDate to be on that specific date
@@ -435,7 +432,7 @@ public abstract class Schedule {
         contentStream.newLineAtOffset(25, 700);
         contentStream.showText("Available and taken appointments");
 
-        //Normaln text
+        //Normal text
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 14);
         contentStream.newLineAtOffset(0, -20);
 
@@ -494,7 +491,7 @@ public abstract class Schedule {
         return true;
     }
 
-    //Call this function to check parametars of dates
+    //Call this function to check parameters of dates
     protected boolean isValidDate(LocalDate date) throws InvalidDateException {
         //For weekend
         //For Sunday and isn't an exclusive day
@@ -519,10 +516,6 @@ public abstract class Schedule {
 
     //TODO Fix documentation arguments
     /**
-     * initializes empty table and fills list of all Exclusive days(Working Sundays) and Not working days (doesn't include Sunday and Saturday)
-     */
-
-    /**
      * Initialize basic info about schedule
      * @param filePath file to read basic info about schedule
      * @throws IOException File must be correct
@@ -532,7 +525,6 @@ public abstract class Schedule {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();
-        notWorkingDays = new ArrayList<>();
 
         FileReader fileReader = new FileReader(filePath);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -542,7 +534,7 @@ public abstract class Schedule {
         DateTimeFormatter formatter = null;
         while ((line = bufferedReader.readLine()) != null) {
 
-            //Takes date formater
+            //Takes date formatter
             if (first) {
                 formatter = DateTimeFormatter.ofPattern(line);
                 first = false;
@@ -552,6 +544,7 @@ public abstract class Schedule {
 
             String[] splitData = splitHeader[1].split(",");
             switch (splitHeader[0]) {
+                //Set startDate and endDate
                 case "ScheduleLast": {
                     this.setStartDate(LocalDate.parse(splitData[0], formatter));
                     this.setEndDate(LocalDate.parse(splitData[1], formatter));
@@ -560,13 +553,19 @@ public abstract class Schedule {
                         throw new InvalidDateException("End Date can't be before start date");
                 }
                 break;
-
+                //Add Rooms
                 case "Rooms": {
                     for (String room : splitData) {
                         this.addRooms(new Room(room));
                     }
                 }
                 break;
+                //Add ExclusiveDays
+                case "ExclusiveDays": {
+                    for (String date : splitData) {
+                        this.getExclusiveDays().add(LocalDate.parse(date, formatter));
+                    }
+                }
             }
         }
     }
@@ -600,7 +599,7 @@ public abstract class Schedule {
     public abstract boolean removeAppointment(Appointment appointment, int day) throws InvalidDateException;
 
     /**
-     * Check if old appointment exist and sets date to new date if it isnt already taken
+     * Check if old appointment exist and sets date to new date if it isn't already taken
      * @param oldAppoint needs to be removed
      * @return boolean return true if it can remove old one and add new one
      */
@@ -742,7 +741,7 @@ public abstract class Schedule {
             a.getTime().setStartTime(LocalTime.of(0, 0));
             a.getTime().setEndTime(LocalTime.of(23, 59));
             a.getTime().setEndDate(a.getTime().getStartDate());
-            //First time start from apponitments start time
+            //First time start from appointments start time
             if (!flag) {
                 a.getTime().setStartTime(tmp.getTime().getStartTime());
                 flag = true;

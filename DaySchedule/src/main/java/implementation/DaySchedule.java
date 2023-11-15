@@ -38,6 +38,16 @@ public class DaySchedule extends Schedule {
         if (appointment.getTime().getEndTime().isBefore(appointment.getTime().getStartTime()))
             throw new InvalidDateException("startTime need to be before endTime");
 
+        //Checks if all days are valid
+        int weeks = weeksBetween(start, appointment.getTime().getEndDate()); //throws exception
+        for (int i = 0; i <= weeks; i++) {
+            //Already has one of the days as appointment, so it fails, or because date isn't valid in some way
+            if (!isValidDate(start))
+                return false;
+
+            start = start.plusDays(7);//goes to next week
+        }
+
         Appointment newAppointment = new Appointment(new Room(appointment.getRoom()), new Time(appointment.getTime()));
         newAppointment.getTime().setDay(day);//sets day of new appointment
 
@@ -498,9 +508,9 @@ public class DaySchedule extends Schedule {
     private List<Appointment> compareAppontiments(Appointment newAppointment) throws InvalidDateException {
 
         List<Appointment> toReturn = new ArrayList<>();
-        int i = -1;
+        //int i = -1;
         for (Appointment savedAppointment : this.getAppointments()) {
-            i++;
+            //i++;
             //They are different if their rooms aren't same
             if (!savedAppointment.getRoom().equals(newAppointment.getRoom()))
                 continue;
