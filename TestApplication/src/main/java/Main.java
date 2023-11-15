@@ -10,7 +10,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        //TODO Treba da se doda sta sve moze u hashMapi da postoji za room i time
         try {
             Class.forName("implementation.DaySchedule"); //makes instance so it calls static block
         } catch (ClassNotFoundException e) {
