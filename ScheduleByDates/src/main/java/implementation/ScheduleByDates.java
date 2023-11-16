@@ -19,7 +19,8 @@ public class ScheduleByDates extends Schedule {
         super(startDate, endDate);
     }
 
-    public ScheduleByDates() {
+    protected ScheduleByDates() {
+        super();
     }
 
     //adds all or none

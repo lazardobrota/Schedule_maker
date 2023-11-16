@@ -30,6 +30,15 @@ public class Time {
     //Constructor will accept bool which tells if true that its 10-12h time, else it tells that its 10h + 2 so then i will change it to 10-12h
     //Constructor gets LocalDate, startTime, endTime, bool isEndTime
     //Time "from to", meaning 10-12h
+
+    /**
+     * Make Time with additional information about that time, when its starting and ending
+     * @param additionally additional information about the time
+     * @param startDate starting Date of time
+     * @param endDate ending Date of time
+     * @param startTime starting Time of time
+     * @param endTime ending Time of time
+     */
     public Time(Map<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.additionally = additionally;
         this.startDate = startDate;
@@ -38,7 +47,14 @@ public class Time {
         this.endTime = endTime;
     }
 
-    //Without addicional data(HashMap)
+    //Without additional data(HashMap)
+    /**
+     * Without additional data make Time
+     * @param startDate starting Date of time
+     * @param endDate ending Date of time
+     * @param startTime starting Time of time
+     * @param endTime ending Time of time
+     */
     public Time(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -47,6 +63,15 @@ public class Time {
     }
 
     //Time "from + how" much, meaning 10h + 2 == 10-12h
+
+    /**
+     * Make Time with additional information about that time, when its starting and how long it lasts
+     * @param additionally additional information about the time
+     * @param startDate starting Date of time
+     * @param endDate ending Date of time
+     * @param startTime starting Time of time
+     * @param minutesToAdd how long it will last
+     */
     public Time(Map<String, String> additionally, LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
         this.additionally = additionally;
         this.startDate = startDate;
@@ -56,6 +81,14 @@ public class Time {
     }
 
     //Without addicional data(HashMap)
+
+    /**
+     * Without additional data make Time, how long it lasts
+     * @param startDate starting Date of time
+     * @param endDate ending Date of time
+     * @param startTime starting Time of time
+     * @param minutesToAdd how long it will last
+     */
     public Time(LocalDate startDate, LocalDate endDate, LocalTime startTime, long minutesToAdd) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -63,10 +96,18 @@ public class Time {
         this.endTime = startTime.plusMinutes(minutesToAdd); // adds minuts to date to be "from to"
     }
 
+    /**
+     * Make empty Time class
+     */
     public Time() {
     }
 
     //Clone atributes constructor
+
+    /**
+     * Clone Time class with different adress
+     * @param that Time class that needs to be cloned
+     */
     public Time(Time that) {
         this.additionally = that.getAdditionally();
         this.startDate = that.getStartDate();
@@ -76,6 +117,11 @@ public class Time {
         this.day = that.getDay();
     }
 
+    /**
+     * Check is two Time classes are equal
+     * @param obj other Time class
+     * @return boolean true if their dates and time intersect, so they are the same
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null)
@@ -102,6 +148,12 @@ public class Time {
     }
 
     //True - they intersect
+
+    /**
+     * Does their time intersect
+     * @param that other Time class
+     * @return boolean true if they intersect
+     */
     public boolean isBetweenTime(Time that) {
 
         //If their StartTime is the same
@@ -132,6 +184,12 @@ public class Time {
     }
 
     //True - they intersect
+
+    /**
+     * Are their dates same
+     * @param that other Time class
+     * @return boolean true if they are same dates
+     */
     public boolean isDateEqual(Time that) {
 
         //If start dates and end dates are equal

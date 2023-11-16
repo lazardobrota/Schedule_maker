@@ -7,11 +7,21 @@ public class Appointment implements Comparable<Appointment>{
     private Room room;
     private Time time;
 
+    /**
+     * Makes appointments in specific room in specific time
+     * @param room specific room
+     * @param time specific time
+     */
     public Appointment(Room room, Time time) {
         this.room = room;
         this.time = time;
     }
 
+    /**
+     * Two appointment are equal if they are in the same room in the same time
+     * @param obj other appointment
+     * @return boolean true if they are the same
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == null)

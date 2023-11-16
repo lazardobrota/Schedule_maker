@@ -17,7 +17,8 @@ public class DaySchedule extends Schedule {
         super(startDate, endDate);
     }
 
-    public DaySchedule() {
+    protected DaySchedule() {
+        super();
     }
 
     @Override

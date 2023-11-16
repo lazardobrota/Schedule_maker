@@ -41,6 +41,11 @@ public abstract class Schedule {
     private List<LocalDate> exclusiveDays; // Working Sundays
     private List<LocalDate> notWorkingDay; // Days that can't be worked on
 
+    /**
+     * Add beginning startDate and endDate
+     * @param startDate start ot schedule
+     * @param endDate end ot schedule
+     */
     public Schedule(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -51,7 +56,7 @@ public abstract class Schedule {
         notWorkingDay = new ArrayList<>();
     }
 
-    public Schedule() {
+     protected Schedule() {
         rooms = new HashSet<>();
         appointments = new ArrayList<>();
         exclusiveDays = new ArrayList<>();

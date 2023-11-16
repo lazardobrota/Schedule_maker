@@ -73,11 +73,12 @@ public class Main {
                         break;
                     //Correct amount
                     try {
-                        schedule.addAppointment(appointment, appointment.getTime().getDay());
+                        if (!schedule.addAppointment(appointment, appointment.getTime().getDay()))
+                            System.out.println("Couldn't add appointment");
                     } catch (InvalidDateException e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(schedule.getAppointments());
+                    println(schedule.getAppointments());
                 }
                 break;
                 //Remove Appointment
@@ -88,11 +89,12 @@ public class Main {
 
                     //Correct amount
                     try {
-                        schedule.removeAppointment(appointment, appointment.getTime().getDay());
+                        if (!schedule.removeAppointment(appointment, appointment.getTime().getDay()))
+                            System.out.println("Couldn't remove appointment");
                     } catch (InvalidDateException e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(schedule.getAppointments());
+                    println(schedule.getAppointments());
                 }
                 break;
                 //Change Appointment
@@ -110,16 +112,27 @@ public class Main {
                     }
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    LocalDate start = LocalDate.parse(splitDate[0], formatter);
-                    LocalDate end = LocalDate.parse(splitDate[1], formatter);
+                    LocalDate start = null;
+                    LocalDate end = null;
+
+                    try {
+                        start = LocalDate.parse(splitDate[0], formatter);
+                        end = LocalDate.parse(splitDate[1], formatter);
+                    }
+                    catch (Exception e) {
+                        System.out.println("Wrong date or time format");
+                        System.out.println(e.getMessage());
+                        continue;
+                    }
 
                     //Correct amount
                     try {
-                        schedule.changeAppointment(appointment, appointment.getTime().getDay(), start, end);
+                        if (!schedule.changeAppointment(appointment, appointment.getTime().getDay(), start, end))
+                            System.out.println("Couldn't change appointment");
                     } catch (InvalidDateException e) {
                         System.out.println(e.getMessage());
                     }
-                    System.out.println(schedule.getAppointments());
+                    println(schedule.getAppointments());
                 }
                 break;
                 //Search appointment
@@ -373,15 +386,25 @@ public class Main {
 
 
     private static Appointment createAppointment(Scanner scanner) {
-        System.out.println("Write data in this format using dd/mm/yyyy hh:mm: startDateTime,endDateTime,day,roomName");
+        System.out.println("Write data in this format using \"dd/mm/yyyy hh:mm\": startDateTime,endDateTime,day,roomName");
         String[] split = scanner.nextLine().split(",");
         if (split.length != 4) {
             System.out.println("Incorrect amount of data");
             return null;
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-        LocalDateTime start = LocalDateTime.parse(split[0], formatter);
-        LocalDateTime end = LocalDateTime.parse(split[1], formatter);
+        LocalDateTime start = null;
+        LocalDateTime end = null;
+
+        try {
+            start = LocalDateTime.parse(split[0], formatter);
+            end = LocalDateTime.parse(split[1], formatter);
+        }
+        catch (Exception e) {
+            System.out.println("Wrong date or time format");
+            System.out.println(e.getMessage());
+            return null;
+        }
 
         Time time = new Time(LocalDate.of(start.getYear(), start.getMonth(), start.getDayOfMonth()), LocalDate.of(end.getYear(), end.getMonth(), end.getDayOfMonth()),
                 LocalTime.of(start.getHour(), start.getMinute()), LocalTime.of(end.getHour(), end.getMinute()));
