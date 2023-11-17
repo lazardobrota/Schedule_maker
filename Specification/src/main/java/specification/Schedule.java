@@ -527,7 +527,6 @@ public abstract class Schedule {
         return true;
     }
 
-    //TODO Fix documentation arguments
     /**
      * Initialize basic info about schedule
      * @param filePath file to read basic info about schedule

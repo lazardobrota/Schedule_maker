@@ -243,9 +243,9 @@ public class DaySchedule extends Schedule {
         List<Appointment> days = new ArrayList<>();
         if (isAvailable) {
             for (Appointment a : this.getAppointments()) {
-                days.addAll(convertToDays(a));
+                days.addAll(convertToDays(a)); //makes list of specific day
             }
-            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days)));
+            days = new ArrayList<>(new ArrayList<>(convertToAvailable(days))); //turns appointment in free appointments
         }
 
         for (Time t : times) {
